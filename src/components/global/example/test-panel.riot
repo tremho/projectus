@@ -1,0 +1,33 @@
+<test-panel id="123">
+    <h1> { props.title} </h1>
+    <p >This test in { props.app.appName } shows we can read values and call methods in our
+        { props.app.presentationName() }. <br/>
+        Click the button below to toggle the text color of this panel.
+    </p>
+    <button onclick={ toggleColor }>Click Me</button>
+    <style>
+        :host {
+             color: red;
+        }
+        button {
+            height: 30px;
+            width: 100px;
+            background-color: lightblue;
+        }
+    </style>
+    <script>
+      let app;
+    export default {
+      onBeforeMount(props, state) {
+        app = props.app;
+      },
+      toggleColor: (e) => {
+        console.log('toggleColor called', e)
+        const el = e.target.parentElement;
+        console.log(el)
+        el.className ?  el.classList.remove(['glit']) : el.classList.add(['glit'])
+        app.testSignal(42)
+      }
+    }
+    </script>
+</test-panel>

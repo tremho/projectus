@@ -51,7 +51,9 @@ The section heirarchy will be something like this:
     
 - Configuration
     - Plugins for binding to associated tools, like VCS repositories and Project trackers
-    - Plugins for language bindings    
+    - Plugins for language bindings   
+    
+- buttons to run npm scripts     
 
 #### Concept
 - Description
