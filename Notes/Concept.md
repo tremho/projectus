@@ -55,6 +55,16 @@ The section heirarchy will be something like this:
     
 - buttons to run npm scripts     
 
+
+- logging output option 
+- general dashboard
+
+- process related to tests that records key screenshots
+for the brochure view
+- brochure view rendered as readme
+- link to dev notes
+
+
 #### Concept
 - Description
     - Document
