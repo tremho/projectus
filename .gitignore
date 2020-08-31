@@ -50,6 +50,7 @@ out/
 # App Files
 # --------------------
 build
+electronMain/build
 node_modules
 npm-debug.log
 .nyc_output

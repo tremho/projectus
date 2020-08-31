@@ -1,7 +1,7 @@
 {
   "name": "Projectus",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "Projectus main process / Electron launcher. Based on GitHub's electron-quick-start demo.",
   "main": "build/main.js",
   "scripts": {
     "start": "tsc && electron ."
@@ -9,13 +9,12 @@
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Projectus",
+    "main",
+    "process"
   ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "steve@ohmert.com (Steven Ohmert)",
+  "license": "ISC",
   "devDependencies": {
     "@types/node": "^14.6.2",
     "electron": "^10.1.0",
