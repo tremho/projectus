@@ -63,7 +63,7 @@ module.exports = {
     publicPath: '/dist/',
     filename: 'bundle.js'
   },
-  devtool: 'inline',
+  devtool: 'eval-source-map',
   devServer: {
     open: true
   },
@@ -78,7 +78,20 @@ module.exports = {
             hot: true
           }
         }]
+      },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        use: [{
+          loader: 'ts-loader',
+          options : {
+            hot: true
+          }
+        }]
       }
     ]
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
   }
 }
