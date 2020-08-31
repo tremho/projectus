@@ -41,6 +41,11 @@ we need to use IPC to the back end for that.
 - [x] set up Electron
 - [X] replicate sanity test status
 - [X] migrate main.js to typescript and build setup
+- [X] setup webpack for typescript and sourcemaps
+and update scripts so we don't do explicit tsc
+and ensure we can debug presentation
+(not sure yet about [debugging main process](https://www.electronjs.org/docs/tutorial/debugging-main-process))
+
 - [ ] devise build cycle hooks
     - before compile
     - compile
