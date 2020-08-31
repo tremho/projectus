@@ -38,8 +38,9 @@ we need to use IPC to the back end for that.
 - [X] Build hello, world display
 - [X] create Presentation core class
 - [X] export via props and verify on display
-- [ ] set up Electron
-- [ ] replicate sanity test status
+- [x] set up Electron
+- [X] replicate sanity test status
+- [X] migrate main.js to typescript and build setup
 - [ ] devise build cycle hooks
     - before compile
     - compile
