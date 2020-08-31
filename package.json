@@ -9,9 +9,9 @@
     "cov": "nyc report --reporter=text-lcov | coveralls",
     "cov-html": "nyc report --reporter=html",
     "clean": "rm -fr build",
-    "build": "tsc; webpack -c --mode production",
+    "build": "webpack -c --mode production",
     "prepublishOnly": "npm test",
-    "start": "tsc; cd electronMain; npm run start"
+    "start": "webpack -c --mode development; cd electronMain; npm run start"
   },
   "keywords": [],
   "author": "",
