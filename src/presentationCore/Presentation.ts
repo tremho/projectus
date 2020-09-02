@@ -1,4 +1,6 @@
 
+let done = true;
+
 export default
 class Presentation {
     private name: string = 'Test App'
@@ -9,5 +11,11 @@ class Presentation {
         console.log('testSignal received: ' + n)
         return n * 10
     }
+    public get items() { return [
+        {title: 'collapse tree', done},
+        {title: 'click on leaf', done},
+        {title: 'document structure and accessors'},
+        {title: 'refactor as a platform'}
+    ]}
 }
 

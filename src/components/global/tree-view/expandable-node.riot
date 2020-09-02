@@ -1,0 +1,54 @@
+<expandable-node>
+    <div onclick="{handleClick}"><span>{ props.label}</span>
+        <span if="{ state.isBranch }">
+            <span if="{state.open}" style="display: inline-block; width: 20px; text-align: right">-</span>
+            <span if="{!state.open}" style="display: inline-block; width: 20px; text-align: right">+</span>
+        </span>
+        <div if="{state.open}" style="margin-left: 30px;">
+        <slot/>
+        </div>
+    </div>
+    <script>
+        import * as riot from 'riot'
+        let instMap = {}
+      export default {
+
+        onBeforeMount (props, state) {
+          this.state = {
+            id: props.id,
+            open: false,
+            item: props.item,
+            onClick: props.item.click,
+            get isBranch () { return this.item.items ? this.item.items.length !== 0 : false }
+          }
+          instMap[props.id] = this
+        },
+        handleClick: (e) => {
+          const id = e.currentTarget.parentElement.id
+          const self = instMap[id]
+          if (self.state.onClick) {
+            self.state.onClick(e)
+          }
+          e.preventDefault()
+          e.stopPropagation()
+          if (self.state.isBranch) {
+            return self.state.open ? self.collapse(self) : self.expand(self)
+          }
+        },
+        expand: (self) => {
+          if (!self.state.open) {
+            console.log('expand')
+            self.state.open = true
+          }
+          self.update()
+        },
+        collapse: (self) => {
+          console.log('collapse')
+          const branch = self.$('tree-view')
+          self.state.open = false
+          if (branch) riot.unmount(branch)
+          self.update()
+        }
+      }
+    </script>
+</expandable-node>

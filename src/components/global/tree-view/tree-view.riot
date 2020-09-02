@@ -1,0 +1,107 @@
+<tree-view>
+    <expandable-node each={ item in model }
+                     item={item} id="{ key }-{ item.index || item.label }"
+                     label="{item.label}"
+                     click="{item.click}"
+    >
+        <tree-view if="{item.items}" model={item.items} key="{nextKey()}}"/>
+        <div if="{!item.items}" each={child in item.items}>{ child.label}</div>
+    </expandable-node>
+    <script>
+        let count = 0;
+        function nextKey() {
+          return 'tree'+count++
+        }
+    export default {
+        onBeforeMount(props, state) {
+          this.nextKey = nextKey,
+          this.key = props.key || nextKey()
+          // Data model
+          if(props.model) this.model = props.model
+          else this.model =  [
+            {
+              index: 0,
+              label: "Vegetables",
+              items: [
+                { label: "Potato" },
+                { label: "Carrot" },
+                { label: "Tomato",
+                  click: (e) => {
+                    console.log("like a tomato, State Farm is there")
+                  }
+                }
+              ]
+            },
+            {
+              index: 1,
+              label: "Fruits",
+              items: [
+                { label: "Orange" },
+                { label: "Watermelon" },
+                { label: "Banana" },
+                { label: "Kumquat" },
+                { label: "Strawberry" },
+                { label: "Raspberry" },
+                { label: "Cherry" }
+              ]
+            },
+            {
+              index: 2,
+              label: "Animals",
+              items: [
+                {
+                  index: 3,
+                  label: "Mammals",
+                  items: [
+                    { label: "Tiger" },
+                    { label: "Platypus" },
+                    { label: "Bear" },
+                    {
+                      label: "More Mammals",
+                      items: [
+                        { label: 'Dog' },
+                        { label: 'Cat' },
+                        { label: 'Hampster' },
+                        { label: 'Ferret' ,
+                          click: () => {
+                            console.log("You've ferreted out the problem, I see")
+                          }
+                        },
+                        { label: 'Weasel' }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  index: 4,
+                  label: "Reptiles",
+                  items: [
+                    { label: "Turtle" },
+                    { label: "Crocodile" }
+                  ]
+                },
+                {
+                  index: 5,
+                  label: "Insects",
+                  items: [
+                    { label: "Bee" },
+                    { label: "Fly" },
+                    { label: "Ant" }
+                  ]
+                }
+              ]
+            },
+            {
+              index: 6,
+              label: "Durations",
+              items: () => timeoutPromise([
+                { label: "0.5 second", items: () => timeoutPromise([{ label: "Brief" }], 500) },
+                { label: "2 seconds", items: () => timeoutPromise([{ label: "Enduring" }], 2000) },
+                { label: "4 seconds", items: () => timeoutPromise([{ label: "Everlasting" }], 4000) }
+              ], 1000)
+            }
+          ]
+        }
+    }
+    </script>
+</tree-view>
