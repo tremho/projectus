@@ -62,3 +62,4 @@ generated
 .nycrc
 !.gitmodules
 !.travis.yml
+/css/

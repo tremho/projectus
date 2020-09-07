@@ -1,0 +1,18 @@
+
+<summary-drop-down>
+    <drop-down id="summary-drop-down"  label="Project Types" items="{summary.items}"/>
+    <style>
+    </style>
+    <script>
+    import * as cm from '../../Common'
+    export default {
+       state: {
+       },
+       onBeforeMount(props, state) {
+         this.summary = {
+           items: ['npm', 'electron', 'riot', 'nodejs', 'webpage', 'nativescript', ]
+         }
+       }
+    }
+    </script>
+</summary-drop-down>

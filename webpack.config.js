@@ -54,6 +54,7 @@ const distPath = path.resolve(__dirname, 'dist')
 copyFolderRecursiveSync(path.join(srcPath, 'components'), buildPath)
 // copy the app.riot file
 fs.copyFileSync(path.join(srcPath, 'app.riot'), path.join(buildPath, 'app.riot'))
+fs.copyFileSync(path.join(srcPath, 'scratch-app.riot'), path.join(buildPath, 'scratch-app.riot'))
 console.log('copy complete')
 
 module.exports = {
@@ -84,9 +85,6 @@ module.exports = {
         exclude: /node_modules/,
         use: [{
           loader: 'ts-loader',
-          options : {
-            hot: true
-          }
         }]
       }
     ]

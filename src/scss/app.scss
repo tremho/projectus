@@ -1,0 +1,33 @@
+
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
+
+/**
+Apply defaults
+ */
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+
+/**
+Define a label as bold
+ */
+%label {
+  font-weight: bold;
+}
+/**
+apply label definition to both Label tag and label class
+ */
+label {
+  @extend %label;
+}
+.label {
+  @extend %label;
+}
+/**
+Define an offset for values that follow a label in a span.
+ */
+.value {
+  margin-left: 10px;
+}

@@ -1,0 +1,79 @@
+<test-label>
+    <div height="100%" width="100%">
+        <h1>{message}</h1>
+        <button onclick="{onTickle}">Tickle {state.tickled}</button><br/>
+        <button onclick="{onRemove}">Remove</button><br/>
+    </div>
+    <style>
+        div {
+            background-color: aqua;
+        }
+        div.Foo {
+            background-color: aliceblue;
+        }
+    </style>
+    <script>
+        function showState(name, props, state) {
+          // console.log(name)
+          // console.log(this)
+          // console.log(props, state)
+        }
+        import {newCommon} from '../../Common';
+        let cm
+
+        export default {
+            onBeforeMount(props, state) {
+              cm = newCommon(this)
+              const app = cm.getApp()
+              // console.log('found page mounted app', app)
+              this.message = props.message;
+              showState.apply(this, ['BeforeMount', props, state])
+            },
+            onMounted(props, state) {
+              showState.apply(this, ['Mounted', props, state])
+            },
+            onBeforeUpdate(props, state) {
+              showState.apply(this, ['beforeUpdate', props, state])
+            },
+            onUpdated(props, state) {
+              showState.apply(this, ['updated', props, state])
+            },
+            onBeforeUnmount(props, state) {
+              showState.apply(this, ['BeforeUnMount', props, state])
+            },
+            onUnmounted(props, state) {
+              showState.apply(this, ['Unmounted', props, state])
+            },
+            onTickle(e) {
+              console.log('tickled')
+              console.log('event', e)
+              const divEl = e.srcElement.parentElement
+              if(!divEl.className) divEl.className = "Foo"
+              else divEl.className = ''
+              console.log('src element', e.srcElement)
+              const c = cm.getComponent(e.srcElement)
+              c.state.tickled++
+              if(c.state.tickled == 10) {
+                c.message = 'Bingo!'
+                c.app.testSignal(42)
+              }
+              c.update()
+            },
+            onRemove(e) {
+              console.log('removing')
+              console.log('event', e)
+              const c = cm.getComponent(e.srcElement)
+              c.unmount()
+            },
+            message: 'Hello',
+            props: {
+              a: 'a',
+              b: 'b',
+              c: 'c'
+            },
+            state: {
+              tickled: 0
+            }
+        }
+    </script>
+</test-label>

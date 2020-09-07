@@ -1,7 +1,50 @@
 <app>
-    <test-panel title="Test Panel" app= {props.app}/>
+
+    <grid-layout
+            grid-template-columns = "repeat(5, 1fr)"
+            grid-template-rows = "auto 500px auto"
+            area-row-1="header header header header header"
+            area-row-2="nav nav info info ."
+            area-row-3="footer footer footer footer footer"
+    >
+        <grid-section area="header" background="tan" justify-self="stretch"  align-self="stretch">
+            <flex-layout orientation="horizontal" justify-content="space-between" align-items="center">
+                <div id="banner-left">
+                    <name-version/>
+                    <summary-drop-down title="Project Types"/>
+                    <project-status/>
+                </div>
+                <h1>Projectus</h1>
+                <div id="banner-right">
+                    <repository-info/>
+                </div>
+
+            </flex-layout>
+        </grid-section>
+
+        <grid-section area="nav" background="lightblue" justify-self="stretch" align-self="stretch"
+        >
+            <tree-view/>
+        </grid-section>
+        <grid-section background="yellow" area="info" justify-self="stretch" align-self="stretch"
+                      container-style="margin-top: -19px"
+        >
+            <h3>Info section</h3>
+        </grid-section>
+        <grid-section background="blue" area="footer" justify-self="stretch" align-self="stretch"
+                    container-style="margin-top: -19px
+        ">
+            <h3>Footer section</h3>
+        </grid-section>
+
+
+
     <hr/>
-    <todo title="Next Steps" items={props.app.items}/>
-    <hr/>
-    <tree-view/>
+<!--    <test-panel title="Test Panel" app= {props.app}/>-->
+<!--    <hr/>-->
+<!--    <todo title="Next Steps" items={props.app.items}/>-->
+<!--    <hr/>-->
+<!--    <tree-view/>-->
+<!--    <hr/>-->
+<!--    <test-label message="Howdy"/>-->
 </app>
