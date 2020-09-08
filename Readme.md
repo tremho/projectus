@@ -1,8 +1,11 @@
 # Projectus
 
-### Tagline
+<!-- is it possible to comment in markdown?-->
+<!-- pretty sweet!-->
+#### Manage your project design as you build it
 
-#### Description
+### Description
 
 - see [Concept](Notes/Concept.md)
 - see [Reboot Plan](Notes/Riot-based Reboot.md)
+- see all things in the 'Notes' folder.
