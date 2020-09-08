@@ -1,6 +1,6 @@
 
 import * as riot from 'riot'
-import App from './scratch-app.riot'
+import App from './app.riot'
 import Presentation from './presentationCore/Presentation'
 import registerGlobalComponents from './register-global-components'
 

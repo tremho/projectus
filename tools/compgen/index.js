@@ -120,12 +120,25 @@ async function main () {
     <style>    
     </style>
     <script>
-    import * as cm from '../../Common'
-    export default {
-       state: {
-       },
-       onBeforeMount(props, state) {    
-       }    
+        import {newCommon} from '../../Common';
+        let cm;
+        export default {
+            state: { },
+            bound: {},
+            onBeforeMount(props, state) {    
+                cm = newCommon(this)
+            },    
+            onMounted(props, state) {
+                cm.bindComponent()
+            },
+            onBeforeUpdate(props, state) {              
+            },
+            onUpdated(props, state) {              
+            },
+            onBeforeUnmount(props, state) {              
+            },
+            onUnmounted(props, state) {              
+            }
     }
     </script>
 </${compName}>    

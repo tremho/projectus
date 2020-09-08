@@ -4,6 +4,8 @@ import * as path from 'path'
 
 console.log('Launching Electron App')
 
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'YES'
+
 function createWindow (): void {
     // Create the browser window.
     const mainWindow:BrowserWindow = new BrowserWindow({

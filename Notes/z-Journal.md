@@ -24,3 +24,6 @@ some common callpoints, but hey - it's working.
 Leaving undecided the question of decoupling via event and/or timeout pool.
 Let's let the situation develop before we try to solve it.
 
+##### Evening update -
+- binding code cleaned up and boilerplated, better syntax.
+- so, do I do the dropdown UI work now, or do I work on plugin actions?

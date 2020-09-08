@@ -163,14 +163,9 @@ class Common {
       child.style.verticalAlign = 'top'
       const innerChild = child.firstElementChild
       const fitSize = this.nextFit()
-      if(fitSize && fitSize.substring(fitSize.length-2) === '()') {
-        const cbName = fitSize.substring(0, fitSize.length-2)
-        const cb = this.getApp().findCallback(cbName)
-        if(cb) cb(child, innerChild)
-      }
-      else if (isHorizontal) {
+      if (isHorizontal) {
         innerChild.style.width = fitSize;
-      } else innerChild.style.height = fitSize;s
+      } else innerChild.style.height = fitSize;
     }
   }
 
@@ -196,6 +191,32 @@ class Common {
       key = kcp[0]+kcp[1].charAt(0).toUpperCase()+kcp[1].substring(1)
       div.style[key] = value
     })
+  }
+
+  bindComponent() {
+    const component = this.riot
+    const div = this.getContainer() // component.$('DIV')
+    if(!component.bound) component.bound = {}
+    for (let i = 0; i < div.children.length; i++) {
+      const child = div.children[i]
+      let bind = child.getAttribute('bind')
+      const app = this.getApp()
+      const model = app.model
+      if (bind) {
+        const [section, name] = bind.split('.')
+        model.bind(section, name, (prop, value, old) => {
+          const upd = component.bound
+          let doUpdate = upd[prop] !== old || upd[prop] !== value
+          upd[prop] = value
+          if (doUpdate) {
+            component.bound = upd;
+            component.update()
+          }
+        })
+        component.bound[name] = model.getAtPath(bind)
+      }
+    }
+    component.update()
   }
 }
 

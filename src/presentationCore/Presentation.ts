@@ -152,20 +152,6 @@ class Presentation {
         return new StringParser(str)
     }
 
-    public registerCallback(name, callback) {
-        if(typeof callback !== 'function') {
-            console.error(Error(`registered name ${name} is not a function`))
-            return;
-        }
-        this.callbacks[name] = callback;
-    }
-    public findCallback(name) {
-        const cb = this.callbacks[name]
-        if(!cb) {
-            console.warn(`Warning: callback ${name} is not registered`)
-        }
-        return cb;
-    }
 
 }
 
