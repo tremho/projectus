@@ -1,6 +1,31 @@
 <name-version>
-    <p>
-        <span class="label">Project:</span><input type="text" class="value" value="projectName"/>
-        <span class="label value">Version:</span><input type="text" class="value" value="0.0.0"/>
-    </p>
-</name-version>
+    <div>
+        <span class="label">Project:</span><input type="text" class="value" value="{bound.projectName}" bind="topLevelInfo.projectName"/>
+        <span class="label value">Version:</span><input type="text" class="value" value="{bound.projectVersion}" bind="topLevelInfo.projectVersion"/>
+    </div>
+    <style>
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: { },
+        bound: {},
+        onMounted(props, state) {
+          console.log(this.root.tagName, 'Mounted')
+          cm = newCommon(this)
+          cm.bindComponent()
+        },
+        onKey(e) {
+          if(!e) e = window.event;
+          var keyCode = e.keyCode || e.which;
+          if (keyCode == '13'){
+            // Enter pressed
+            const value = e.srcElement.value
+            const bindPath = e.srcElement.getAttribute('bind')
+            cm.getApp().model.setBind(bindPath, value)
+            return false;
+          }
+        }
+      }
+    </script></name-version>

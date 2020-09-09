@@ -11,10 +11,12 @@
             <flex-layout orientation="horizontal" justify-content="space-between" align-items="center">
                 <div id="banner-left">
                     <name-version/>
-                    <summary-drop-down title="Project Types"/>
+                    <labeled-value title="Framework: " width="250px">{props.app.model.getAtPath('topLevelInfo.projectFramework')}</labeled-value>
+                    <labeled-value title="tech stack: " width="250px">{props.app.model.getAtPath('topLevelInfo.devTechTypes').join(', ')}</labeled-value>
+
                     <project-status/>
                 </div>
-                <h1>Projectus</h1>
+                <h1>Deverit</h1>
                 <div id="banner-right">
                     <repository-info/>
                 </div>

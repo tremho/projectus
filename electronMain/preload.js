@@ -10,3 +10,101 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${type}-version`, process.versions[type])
   }
 })
+
+const {
+  contextBridge,
+  ipcRenderer
+} = require("electron");
+
+const {AppGateway} = require('./src/AppGateway')
+
+
+// Expose protected methods that allow the renderer process to use
+// the ipcRenderer without exposing the entire object
+
+const fnames = AppGateway.getFunctionNames()
+const api = {}
+let nextId = 1;
+const responders = {}
+
+class Responder {
+  constructor() {
+    this.id = nextId++
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+      responders[this.id] = this;
+    })
+  }
+  respond(value) {
+    delete responders[this.id]
+    this.resolve(value)
+  }
+  error(e) {
+    delete responders[this.id]
+    console.error(e.stack)
+    this.reject(e)
+  }
+}
+
+fnames.forEach(fname => {
+  api[fname] = function (...args) {
+
+    const resp = new Responder()
+    const data = {
+      id: resp.id,
+      args
+    }
+    ipcRenderer.send(fname, data)
+    ipcRenderer.on(fname, (event, data) => {
+      const respIn = responders[data.id]
+      if(data.error) {
+        respIn.error(data.error)
+      } else {
+        respIn.respond(data.response)
+      }
+    })
+    return resp.promise
+  }
+
+  /**
+   * Add a message listener.  Returns an Id used to unlisten.
+   * @param msgName
+   * @param callback
+   * @returns {number}
+   */
+  api.addMessageListener = (msgName, callback) => {
+    if(!messageListeners[msgName]) messageListeners[msgName] = []
+    const id = nextMessageListenerId++
+    messageListeners[msgName].push({id, callback})
+    return id;
+  }
+
+  /**
+   * Remove a message listener. Must supply message name and listener id.
+   * @param msgName
+   * @param id
+   * @returns {boolean} true if successfully removed.
+   */
+  api.removeMessageListener = (msgName, id) => {
+    let lsts = messageListeners[msgName] | []
+    for(let i=0; i< lsts.length; i++) {
+      if(lsts[i].id === id) {
+        messageListeners[msgName] = lsts.splice(i,1)
+        return true;
+      }
+    }
+    return false;
+  }
+
+  ipcRenderer.on('message', (event, ...args) => {
+    const msgName = args[0]
+    const msg = args[1]
+    const lsts = messageListeners[msgName] | []
+    for(let i=0; i<lsts.length; i++) {
+      lsts[i].callback(msg)
+    }
+  })
+})
+
+contextBridge.exposeInMainWorld("api", api);

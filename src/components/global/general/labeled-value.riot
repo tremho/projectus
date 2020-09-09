@@ -1,0 +1,43 @@
+
+<labeled-value>
+    <div>
+        <span class="label">{props.title}</span><div class="value" style="width:{props.width};"><slot/></div>
+    </div>
+    <style>
+        div.value {
+            display:inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: bottom;
+        }
+        /* We can hover over and use arrow keys to scroll */
+        div.value:hover {
+            overflow: scroll;
+            text-overflow: unset;
+            background-color: yellow;
+        }
+    </style>
+    <script>
+        import {newCommon} from '../../Common';
+        let cm;
+        export default {
+            state: { },
+            bound: {},
+            onBeforeMount(props, state) {
+                cm = newCommon(this)
+            },    
+            onMounted(props, state) {
+                cm.bindComponent()
+            },
+            onBeforeUpdate(props, state) {              
+            },
+            onUpdated(props, state) {              
+            },
+            onBeforeUnmount(props, state) {              
+            },
+            onUnmounted(props, state) {              
+            }
+    }
+    </script>
+</labeled-value>    

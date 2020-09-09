@@ -1,5 +1,6 @@
 
 import {AppModel} from "./AppModel";
+const mainApi = (window as any).api;
 
 let done = true;
 
@@ -8,10 +9,19 @@ let done = true;
  */
 
 const whitespace = [' ','\t','\r\n','\n','\r']
+
+/**
+ * String Parser is a helper for stepwise tokenized string reading.
+ */
 class StringParser {
     private parseString: string;
     private parsePos: number;
 
+    /**
+     * Constructs a StringParser object, setting up a string to be parsed
+     *
+     * @param parseString
+     */
     constructor (parseString:string) {
         this.parseString = parseString;
         this.parsePos = 0;
@@ -128,30 +138,50 @@ class StringParser {
 }
 
 export default
-class Presentation {
-    private name: string = 'Test App'
-    private callbacks: object = {}
+/**
+ *  Core object of the application.  Contains the app model and gateway functions for actions, which are
+ *  mostly handled by action modules.
+ */
+class AppCore {
     private appModel:AppModel = new AppModel()
+    private rootPath:string;
+    private topLevelInfo:object;
 
+    /**
+     * get the model used for binding to the UI.
+     */
     public get model() {
         return this.appModel
     }
-    public presentationName() { return this.name + ' Presentation Core'; }
-    public testSignal(n:number): number {
-        console.log('testSignal received: ' + n)
-        return n * 10
-    }
-    public get items() { return [
-        {title: 'collapse tree', done},
-        {title: 'click on leaf', done},
-        {title: 'document structure and accessors'},
-        {title: 'refactor as a platform'}
-    ]}
 
+    /**
+     * Return an instance of StringParser for the given string
+     * @param str
+     */
     public makeStringParser(str) {
         return new StringParser(str)
     }
 
+    /**
+     * Set the root directory of the project we are concerned with
+     * @param path
+     */
+    public setProjectRoot (path:string) {
+        this.rootPath = path;  // TODO: Not currently used
+    }
 
+
+    /**
+     * Use some general discovery and action module interfaces to determine what
+     * type(s) of project is at the root directory.
+     */
+    public discovery() {
+        // quick sniffs to rule in/out different modules
+        return mainApi.projectDiscovery('/Users/sohmert/tbd/projectus').then(results => {
+            console.log('Top Level Info', results)
+            this.topLevelInfo = results;
+            this.model.addSection('topLevelInfo',results);
+        })
+    }
 }
 

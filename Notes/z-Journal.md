@@ -27,3 +27,39 @@ Let's let the situation develop before we try to solve it.
 ##### Evening update -
 - binding code cleaned up and boilerplated, better syntax.
 - so, do I do the dropdown UI work now, or do I work on plugin actions?
+
+other stuff:
+
+- set up watchers for tsc, sass, and webpack and create a browser-based dev mode
+- Thinking of changing the name to 'Deverity' or 'Deveritas' or 'Deveritable'
+
+9/8
+It's hot today.
+Anyway, have IPC layer to back end working, and calling FileSystem
+methods there.
+
+The model is supplying all the values to the UI, and these are being
+set by the callers into the Discovery module on the back end.
+
+Have a hard-coded path for project in there now.
+For our 'we are our own project' scenario, we can pass in something
+discovered locally (hard-coded, but relative)
+
+We should enable the menu and add a file/open action to point us
+at a different project to evaluate.  Maybe do discovery for a few more types.
+
+Invoke modules per framework.  These will in turn invoke modules per
+tech, and use common features of tech stack within framework context.
+
+We should also set up the tree, and put TLInfo at the top.  We can
+put TL detail info in the info panel, and also any build actions.
+We're going to want to expose scripts as buttons for npm projects, we
+can put these there (scrollable toolbar at top of panel?)
+
+But I'm already ahead of myself.  We need to stick to the bootstrap.
+Next step is to parse the dvt files and record a set of features with
+objectives, components, and code entries.
+Also use to populate TLInfo and reference tree.
+
+
+

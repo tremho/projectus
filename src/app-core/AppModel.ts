@@ -132,19 +132,10 @@ function proxySection(name:string, props:object) {
 export class AppModel {
 
     private model:object = {
-        appInfo: proxySection('appInfo', {
-            name: 'Projectus',
-            version: '0.0.0.0-dev+start',
-        }),
-        testProps: proxySection('testProps', {
-            date: new Date(),
-            firstName: 'Steve',
-            lastName: 'Ohmert',
-            address: '25731 78th Ave SW',
-            city: 'Vashon',
-            state: 'WA',
-            zip: '98070'
-        })
+    }
+
+    public addSection(name, props) {
+        this.model[name] = proxySection(name, props)
     }
 
     public bind( section:string, prop:string, onChange:any, type?:string) {

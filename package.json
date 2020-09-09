@@ -1,7 +1,7 @@
 {
-  "name": "projectus",
-  "version": "1.0.0",
-  "description": "",
+  "name": "deverit",
+  "version": "0.0.0",
+  "description": "Project development management tool",
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",

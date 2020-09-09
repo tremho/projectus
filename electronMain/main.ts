@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import * as path from 'path'
 
-console.log('Launching Electron App')
+console.log('Launching Electron App\n')
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'YES'
 
@@ -12,6 +12,9 @@ function createWindow (): void {
         width: 800,
         height: 600,
         webPreferences: {
+            nodeIntegration: false, // we handle all the node stuff back-side
+            contextIsolation: true, // gateway through window.api
+            enableRemoteModule: false,
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -19,6 +22,7 @@ function createWindow (): void {
     // and load the index.html of the app.
     mainWindow.loadFile('../index.html')
 
+    mainWindow.fullScreen = true;
     // Open the DevTools.
     mainWindow.webContents.openDevTools()
 }
@@ -45,3 +49,5 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+import {AppGateway} from './src/AppGateway'
+new AppGateway(ipcMain)
