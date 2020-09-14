@@ -1,0 +1,42 @@
+
+<bind-test>
+    <div>
+        <span class="label">First Name:</span><input type="text" class="value" value="{bound.firstName}" onkeypress="{onKey}" bind="testProps.firstName"/>
+        <span width="10px">&nbsp;</span>
+        <span class="label">Last Name:</span><input type="text" class="value" value="{bound.lastName}" onkeypress="{onKey}" bind="testProps.lastName"/>
+
+        <p><span bind="testProps.firstName">{bound.firstName}</span>&nbsp;&nbsp;<span bind="testProps.lastName">{bound.lastName}</span></p>
+        <p bind="testProps.address">{bound.address}</p>
+        <span bind="testProps.city">{bound.city}</span>
+        <span width="10px">, &nbsp;</span>
+        <span bind="testProps.state">{bound.state}</span><br/>
+        <span bind="testProps.zip">{bound.zip}</span>
+    </div>
+
+    <style>    
+    </style>
+    <script>
+        import {newCommon} from '../../Common';
+        let cm;
+        export default {
+            state: { },
+            bound: {},
+            onMounted(props, state) {
+                console.log(this.root.tagName, 'Mounted')
+                cm = newCommon(this)
+                cm.bindComponent()
+            },
+            onKey(e) {
+                if(!e) e = window.event;
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == '13'){
+                // Enter pressed
+                const value = e.srcElement.value
+                const bindPath = e.srcElement.getAttribute('bind')
+                cm.getApp().model.setBind(bindPath, value)
+                return false;
+            }
+      }
+    }
+    </script>
+</bind-test>    
