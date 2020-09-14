@@ -14,7 +14,7 @@ as the project progresses.
 Kicking things off, is being able to parse .dvt files like this one, starting with concept.dvt
 
 
-## Objectives
+# Objectives
 - Project type is identified and recorded in app core
 - Top Level project info is fed into model
 - Top Level info is represented in UI
@@ -26,7 +26,7 @@ Kicking things off, is being able to parse .dvt files like this one, starting wi
 - Test results appear in UI
 
 
-$ UI Components
+# UI Components
 
     - grid-layout
     - grid-section
@@ -37,7 +37,7 @@ $ UI Components
     - tree-view
         > expandable-node
 
-$ Code
+# Code
 
     - app-core/AppCore
         > app-core/AppModel

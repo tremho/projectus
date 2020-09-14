@@ -37,3 +37,29 @@ for example, for project type it will have a map for different
 bits of injectable modules to handle each action phase for that
 type.  
 
+----
+#### Info panel
+- top part changes with tree
+- lower part is for status logging
+
+
+##### category and type
+categories are as defined in [Generic Project Breakdown](Notes/x-Generic%20Project%20Breakdown.md)
+and separate the objectives and specified tasks.
+`type` is used to separate code module, ui component, or other
+technically divergent concepts from one another.
+
+### Tree items
+- `Basic Info`: shows generalized status, like
+    - name
+    - git status and dates
+    - version status
+
+- `Objectives`: shows concept tree and item statuses
+    - tree branches per category / type
+- `Specification`: view or construct specification templates
+for code or component modules to address an objective and show
+    - status of verification tests
+    - like objectives, tree is organized by category / type
+
+- `Tools`: access a panel for buttons to run exposed build scripts         

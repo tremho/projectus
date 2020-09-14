@@ -1,10 +1,11 @@
 {
-  "name": "Projectus",
+  "name": "deveritae-electron",
   "version": "1.0.0",
-  "description": "Projectus main process / Electron launcher. Based on GitHub's electron-quick-start demo.",
+  "description": "Deveritae main process / Electron launcher. Based on GitHub's electron-quick-start demo.",
   "main": "build/main.js",
   "scripts": {
-    "start": "tsc && electron ."
+    "start": "tsc; electron .",
+    "clean": "rm -fr ./build"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [

@@ -28,6 +28,7 @@
         },
         handleClick: (e) => {
           const self = cm.getComponent(e.srcElement)
+          console.log(self.root.tagName, 'handleClick')
           if (self.state.onClick) {
             self.state.onClick(e)
           }

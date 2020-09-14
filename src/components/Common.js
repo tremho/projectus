@@ -1,3 +1,6 @@
+
+import {SimpleDateFormat} from '../general/SimpleDateFormat'
+
 export function getApp() {
   const rootComp = getComponent(document.body.querySelector('[is="app"]'))
   const app = rootComp.props.app;
@@ -195,14 +198,9 @@ class Common {
 
   bindComponent() {
     const component = this.riot
-    const div = this.getContainer() // component.$('DIV')
     if(!component.bound) component.bound = {}
-    for (let i = 0; i < div.children.length; i++) {
-      const child = div.children[i]
-      let bind = child.getAttribute('bind')
-      const app = this.getApp()
-      const model = app.model
-      if (bind) {
+    function doBind(bind) {
+      if(bind) {
         const [section, name] = bind.split('.')
         model.bind(section, name, (prop, value, old) => {
           const upd = component.bound
@@ -216,7 +214,28 @@ class Common {
         component.bound[name] = model.getAtPath(bind)
       }
     }
+    const div = this.getContainer() // component.$('DIV')
+    const app = this.getApp()
+    const model = app.model
+    // doBind(component.getAttribute('bind'))
+    doBind(div.getAttribute('bind'))
+    for (let i = 0; i < div.children.length; i++) {
+      const child = div.children[i]
+      doBind(child.getAttribute('bind'))
+    }
     component.update()
+  }
+
+  formatDate(dtIn, format) {
+    let db = true
+    let sdf = new SimpleDateFormat(dtIn)
+    if(format) sdf.setFormat(format)
+    console.log('do your debugging here')
+    let rt = "foobar"
+    if(db) {
+      rt = sdf.toString()
+    }
+    return rt
   }
 }
 

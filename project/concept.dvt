@@ -1,0 +1,27 @@
+# Project Name
+Deveritae
+
+# Project Development Description
+Project source for the Deveritae project development management tool.
+
+# Product tagline
+Manage your project design as you build it
+
+# Elevator Pitch
+Great code is seldom planned in full from the beginning.  In fact, modern Agile processes persuade against a top-heavy
+plan and design phase. As a result, key aspects of solid professional software development such as specifications,
+unit tests, and documentation are often neglected or left incomplete.  Disciplined management of growing your project
+from the ground up while keeping these aspects up to date is daunting, tedious, and error-prone.  Deverit handles
+the reconciliation of these tasks for you and automates much of the process, leaving you free to concentrate on the
+features of your design, knowing that your design plan is current with your project build at each phase, with specifications
+and tests to verify that.
+
+# Development Steps
+
+- First Parts
+- DVT Parsing
+- Objective breakdown
+- Code, component, and test construction
+- Objective code verification
+- Objective verification
+

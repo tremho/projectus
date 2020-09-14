@@ -1,141 +1,19 @@
 
 import {AppModel} from "./AppModel";
+import {StringParser} from "../general/StringParser"
+
+import {getInfoMessageRecorder, InfoMessageRecorder} from "./InfoMessageRecorder";
+
+let imrSingleton:InfoMessageRecorder = getInfoMessageRecorder()
+
+function writeMessage(subject:string, message:string) {
+    imrSingleton.write(subject, message)
+}
+
 const mainApi = (window as any).api;
 
 let done = true;
 
-/**
- * Information returned from tokenize function of Tokenizer
- */
-
-const whitespace = [' ','\t','\r\n','\n','\r']
-
-/**
- * String Parser is a helper for stepwise tokenized string reading.
- */
-class StringParser {
-    private parseString: string;
-    private parsePos: number;
-
-    /**
-     * Constructs a StringParser object, setting up a string to be parsed
-     *
-     * @param parseString
-     */
-    constructor (parseString:string) {
-        this.parseString = parseString;
-        this.parsePos = 0;
-    }
-
-    /**
-     * Moves just behind the match occurrence, looking forward
-     *
-     * @param match
-     */
-    public aheadTo(match) : void {
-        this.parsePos = this.parseString.indexOf(match, this.parsePos)
-    }
-
-    /**
-     * Moves just forward of the match occurrence, looking forward
-     * @param match
-     */
-    public aheadPast(match) : void {
-        this.parsePos = this.parseString.indexOf(match, this.parsePos) + match.length;
-    }
-
-    /**
-     * Moves just forward the match occurrence, looking backward.
-     * @param match
-     */
-    public backTo(match) : void {
-        this.backBefore(match);
-        this.parsePos += match.length;
-
-    }
-
-    /**
-     * Moves to the start of the match occurrence, looking backward.
-     * @param match
-     */
-    public backBefore(match) : void {
-        this.parsePos = this.parseString.lastIndexOf(match, this.parsePos)
-
-    }
-
-    /**
-     * Reads the word next in the parse string.
-     * "Word" is terminated by the occurrence of one of the given delimiters.
-     *
-     * @param delimiters
-     */
-    public readNext(delimiters?: string[]) : string {
-        if(!delimiters) delimiters = whitespace;
-        let index = -1;
-        let ds = delimiters.slice(0); // make copy
-        while(index === -1) {
-             const d = ds.shift()
-            if(!d) break;
-            index = this.parseString.indexOf(d, this.parsePos)
-        }
-        if(index === -1) index = undefined;
-        const word = this.parseString.substring(this.parsePos, index)
-        this.parsePos = index ? index + 1 : this.parseString.length;
-        this.skipWhitespace()
-        return word;
-    }
-
-    /**
-     * Reads the word prior to the current position.
-     * "Word" is terminated by the occurrence of one of the given delimiters.
-     *
-     * @param delimiters
-     */
-    public readPrevious(delimiters?:string[]) : string {
-        if(!delimiters) delimiters = whitespace;
-        let index = -1;
-        let ds = delimiters.slice(); // make copy
-        while(index === -1) {
-            const d = ds.shift()
-            if(!d) break;
-            index = this.parseString.lastIndexOf(d, this.parsePos)
-        }
-        if(index === -1) index = 0;
-        const word = this.parseString.substring(index, this.parsePos)
-        return word;
-    }
-
-    /**
-     * advances past any interceding whitespace at current position.
-     */
-    public skipWhitespace() : void {
-        while(whitespace.indexOf(this.parseString.charAt(this.parsePos)) !== -1) {
-            this.parsePos++
-        }
-    }
-
-    /**
-     * Returns the remaining part of the string ahead of parse position
-     */
-    public getRemaining() : string {
-        return this.parseString.substring(this.parsePos + 1)
-    }
-
-    /**
-     * Moves the current parse position the given amount
-     * @param charCount
-     */
-    public advancePosition(charCount:number) {
-        this.parsePos += charCount;
-    }
-
-    /**
-     * Returns the current parse position
-     */
-    public get parsePosition() { return this.parsePos }
-
-
-}
 
 export default
 /**
@@ -161,7 +39,7 @@ class AppCore {
     public makeStringParser(str) {
         return new StringParser(str)
     }
-
+    
     /**
      * Set the root directory of the project we are concerned with
      * @param path
@@ -170,6 +48,76 @@ class AppCore {
         this.rootPath = path;  // TODO: Not currently used
     }
 
+    public requestMessages() {
+        mainApi.messageInit().then(() => {
+            console.log('messages wired')
+        })
+    }
+    
+    private showObjectives(type) {
+        console.log('show '+type+' objectives')
+    }
+    private showSpecifications(type) {
+        console.log('show '+type+' specifications')
+    }
+
+    public setupUIElements() {
+        this.model.addSection('uiElements', {
+            navTree: [
+                {
+                    index: 0,
+                    label: "Basic Info",
+                    click: (e) => {
+                        console.log('Show Basic Info')                    
+                    }
+                },{
+                    index: 1,
+                    label: "Objectives",
+                    click: (e) => {
+                        this.showObjectives('General')  
+                    },   
+                    items: [
+                        {label: "Infrastructure", click: (e)=> {this.showObjectives('Infrastructure')}},
+                        {label: "Library/Utility", click: (e)=> {this.showObjectives('Library')}},
+                        {label: "Information Model", click: (e)=> {this.showObjectives('IM')}},
+                        {label: "Business Logic", click: (e)=> {this.showObjectives('BusinessLogic')}},
+                        {label: "User Interface", click: (e)=> {this.showObjectives('UI')}},
+                        {label: "External Tasks", click: (e)=> {this.showObjectives('External')}},
+                        {label: "Refactoring", click: (e)=> {this.showObjectives('Refactoring')}}
+                    ]
+                }, {
+                    index: 2,
+                    label: 'Specifications',
+                    click: (e) => {
+                        this.showSpecifications('General')
+                    },
+                    items: [
+                        {label: "Infrastructure", click: (e)=> {this.showSpecifications('Infrastructure')}},
+                        {label: "Library/Utility", click: (e)=> {this.showSpecifications('Library')}},
+                        {label: "Information Model", click: (e)=> {this.showSpecifications('IM')}},
+                        {label: "Business Logic", click: (e)=> {this.showSpecifications('BusinessLogic')}},
+                        {label: "User Interface", click: (e)=> {this.showSpecifications('UI')}},
+                        {label: "External Tasks", click: (e)=> {this.showSpecifications('External')}},
+                        {label: "Refactoring", click: (e)=> {this.showSpecifications('Refactoring')}}
+                    ]
+                }, {
+                    index: 3,
+                    label: "Build Tools",
+                    click: (e) => {
+                        console.log('show build tools')
+                    }
+                }
+            ]
+        })
+        // set the infomessage log handling
+        this.model.addSection('infoMessage', { messages: [] })
+        mainApi.addMessageListener('IM', data => {
+            writeMessage(data.subject, data.message)
+        })
+        imrSingleton.subscribe(msgArray => {
+            this.model.setAtPath('infoMessage.messages', msgArray)
+        })
+    }
 
     /**
      * Use some general discovery and action module interfaces to determine what
@@ -177,10 +125,14 @@ class AppCore {
      */
     public discovery() {
         // quick sniffs to rule in/out different modules
-        return mainApi.projectDiscovery('/Users/sohmert/tbd/projectus').then(results => {
+        return mainApi.projectDiscovery(this.rootPath).then(results => {
             console.log('Top Level Info', results)
-            this.topLevelInfo = results;
-            this.model.addSection('topLevelInfo',results);
+            this.model.addSection('topLevelInfo', results);
+
+            return mainApi.readConcept(this.rootPath).then(results => {
+                console.log('Concept Tree', results)
+                this.model.addSection('concept', results)
+            })
         })
     }
 }

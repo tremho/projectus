@@ -1,0 +1,28 @@
+<nav-tree>
+    <div>
+        <tree-view key="nav" model="{bound.navTree}" bind="uiElements.navTree"/>
+    </div>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: { },
+        bound: {},
+        onBeforeMount(props, state) {
+          console.log(this.root.tagName, 'onBeforeMount', this.bound)
+          cm = newCommon(this)
+        },
+        onMounted(props, state) {
+          cm.bindComponent()
+          console.log(this.root.tagName, 'onBeforeMount', this.bound)
+        },
+        onBeforeUpdate(props, state) {
+          console.log(this.root.tagName, 'onBeforeUpdate', this.bound)
+        },
+        onUpdated(props, state) {
+          console.log(this.root.tagName, 'onUpdated', this.bound)
+        }
+
+      }
+    </script>
+</nav-tree>

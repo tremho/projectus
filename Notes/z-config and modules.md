@@ -1,5 +1,5 @@
 
-Projectus (or Deverit) has different code modules that deal with
+Projectus (or Deveritae) has different code modules that deal with
 different project types.
 
 Some project structures are combinations of project types.
@@ -17,7 +17,7 @@ one of these modules is 'Discovery' and it it charged with determining
 the type of project this is by examining the directory contents.
 If a configuration file must be saved to simplify this in future
 runs (required if there is any user-interrogation necessary), then
-it should be named `deverit.info` at the root. 
+it should be named `deveritae.info` at the root. 
 
 modules are loaded per project type (once determined)
 

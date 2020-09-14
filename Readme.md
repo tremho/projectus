@@ -8,4 +8,5 @@
 
 - see [Concept](Notes/Concept.md)
 - see [Reboot Plan](Notes/Riot-based Reboot.md)
+- see [Generic Project Breakdown](Notes/x-Generic Project Breakdown.md)
 - see all things in the 'Notes' folder.

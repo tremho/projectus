@@ -26,6 +26,8 @@ const fnames = AppGateway.getFunctionNames()
 const api = {}
 let nextId = 1;
 const responders = {}
+let nextMessageListenerId = 1;
+const messageListeners = {};
 
 class Responder {
   constructor() {
@@ -57,54 +59,57 @@ fnames.forEach(fname => {
     }
     ipcRenderer.send(fname, data)
     ipcRenderer.on(fname, (event, data) => {
+      console.log(`in response handler for ${fname} ${data.id}`)
       const respIn = responders[data.id]
-      if(data.error) {
-        respIn.error(data.error)
-      } else {
-        respIn.respond(data.response)
+      if(respIn) {
+        if (data.error) {
+          respIn.error(data.error)
+        } else {
+          respIn.respond(data.response)
+        }
       }
     })
     return resp.promise
   }
-
-  /**
-   * Add a message listener.  Returns an Id used to unlisten.
-   * @param msgName
-   * @param callback
-   * @returns {number}
-   */
-  api.addMessageListener = (msgName, callback) => {
-    if(!messageListeners[msgName]) messageListeners[msgName] = []
-    const id = nextMessageListenerId++
-    messageListeners[msgName].push({id, callback})
-    return id;
-  }
-
-  /**
-   * Remove a message listener. Must supply message name and listener id.
-   * @param msgName
-   * @param id
-   * @returns {boolean} true if successfully removed.
-   */
-  api.removeMessageListener = (msgName, id) => {
-    let lsts = messageListeners[msgName] | []
-    for(let i=0; i< lsts.length; i++) {
-      if(lsts[i].id === id) {
-        messageListeners[msgName] = lsts.splice(i,1)
-        return true;
-      }
-    }
-    return false;
-  }
-
-  ipcRenderer.on('message', (event, ...args) => {
-    const msgName = args[0]
-    const msg = args[1]
-    const lsts = messageListeners[msgName] | []
-    for(let i=0; i<lsts.length; i++) {
-      lsts[i].callback(msg)
-    }
-  })
 })
+ipcRenderer.on('message', (event, data) => {
+  const msgName = data.name
+  const msg = data.data
+  const lsts = messageListeners[msgName] || []
+  for(let i=0; i<lsts.length; i++) {
+    lsts[i].callback(msg)
+  }
+})
+
+/**
+ * Add a message listener.  Returns an Id used to unlisten.
+ * @param msgName
+ * @param callback
+ * @returns {number}
+ */
+api.addMessageListener = (msgName, callback) => {
+  if(!messageListeners[msgName]) messageListeners[msgName] = []
+  const id = nextMessageListenerId++
+  messageListeners[msgName].push({id, callback})
+  return id;
+}
+
+/**
+ * Remove a message listener. Must supply message name and listener id.
+ * @param msgName
+ * @param id
+ * @returns {boolean} true if successfully removed.
+ */
+api.removeMessageListener = (msgName, id) => {
+  let lsts = messageListeners[msgName] | []
+  for(let i=0; i< lsts.length; i++) {
+    if(lsts[i].id === id) {
+      messageListeners[msgName] = lsts.splice(i,1)
+      return true;
+    }
+  }
+  return false;
+}
+
 
 contextBridge.exposeInMainWorld("api", api);

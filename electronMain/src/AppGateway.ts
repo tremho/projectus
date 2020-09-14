@@ -1,8 +1,11 @@
 
-import {projectDiscovery } from './Discovery'
+import {projectDiscovery} from "./Discovery"
+import {readConcept} from "./DeveritaeFile"
 
 const exportedFunctions = {
-    projectDiscovery
+    messageInit: () => { console.log('message init stub hit') },
+    projectDiscovery,
+    readConcept,
 }
 
 /**
@@ -10,10 +13,12 @@ const exportedFunctions = {
  * Supports Remote Procedure calls and messaging
  */
 export class AppGateway {
-    private ipcMain:any;
 
-    constructor(ipcMain:any) {
-        this.ipcMain = ipcMain;
+    private ipcMain:any;
+    private static ipcMessageSender = null;
+
+    constructor(ipcMainIn:any) {
+        this.ipcMain = ipcMainIn;
         this.attach();
     }
 
@@ -24,22 +29,30 @@ export class AppGateway {
     private attach() {
         Object.getOwnPropertyNames(exportedFunctions).forEach(fname => {
             const fn = exportedFunctions[fname]
-            this.ipcMain.on(fname, (event, ...args)=> {
+            this.ipcMain.on(fname, (event, ...args) => {
                 const data = args[0]
                 const id = data.id
                 const callArgs = data.args || []
 
-                let response,error;
+                let response, error;
                 try {
                     response = fn(...callArgs)
-                } catch(e) {
+                } catch (e) {
                     error = e;
                 }
-                event.sender.send(fname, { id, response, error })
+                if(fname === 'messageInit') {
+                    AppGateway.ipcMessageSender = event.sender;
+                    // console.log('set ipcMessageSender to ', AppGateway.ipcMessageSender)
+                    // console.log(fname, id)
+                }
+                event.sender.send(fname, {id, response, error})
             })
         })
     }
-    public sendMessage(name:string, data:any) {
-        this.ipcMain.send('message', {name, data})
+    public static sendMessage(name:string, data:any) {
+        // console.log('sending ipc message', name, data)
+        if(AppGateway.ipcMessageSender) {
+            AppGateway.ipcMessageSender.send('message', {name, data})
+        }
     }
 }

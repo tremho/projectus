@@ -101,7 +101,7 @@ function bind(model:object, section:string, prop:string, onChange:any, type?:str
 function announce(section:string, prop:string, value:any, old?:any) {
     // find bindings for section name, prop
     const bnds = bindings.up[section]
-    bnds.forEach(bnd => {
+    if(bnds) bnds.forEach(bnd => {
         // communicate value to ui layer
         bnd.onChange(prop, value, old)
     })

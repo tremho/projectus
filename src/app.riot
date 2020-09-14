@@ -16,7 +16,7 @@
 
                     <project-status/>
                 </div>
-                <h1>Deverit</h1>
+                <h1>Deveritae</h1>
                 <div id="banner-right">
                     <repository-info/>
                 </div>
@@ -26,20 +26,27 @@
 
         <grid-section area="nav" background="lightblue" justify-self="stretch" align-self="stretch"
         >
-            <tree-view/>
+            <nav-tree/>
         </grid-section>
-        <grid-section background="yellow" area="info" justify-self="stretch" align-self="stretch"
-                      container-style="margin-top: -19px"
+        <grid-section area="info" justify-self="stretch" align-self="stretch"
         >
-            <h3>Info section</h3>
+            <split-panel orientation="vertical" end-divider="false">
+
+                <div style="background:aqua;height:400px;">
+                    Info section top
+                </div>
+
+                <div style="background:salmon;height:150px;">
+                    <info-logger/>
+                </div>
+
+            </split-panel>
         </grid-section>
-        <grid-section background="blue" area="footer" justify-self="stretch" align-self="stretch"
-                    container-style="margin-top: -19px
-        ">
+        <grid-section background="blue" area="footer" justify-self="stretch" align-self="stretch">
             <h3>Footer section</h3>
         </grid-section>
 
-
+    </grid-layout>
 
     <hr/>
 <!--    <test-panel title="Test Panel" app= {props.app}/>-->
