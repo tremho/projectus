@@ -88,7 +88,7 @@ it works okay and is flexible.
 We've parsed the Deveritae file, but all we really get from it are
 console warnings and errors (or presumably a lack thereof).
 
-- Creating a log recorder is part of our next steps.
+- [X] Creating a log recorder is part of our next steps.
 
 - More completely, we also need to record the status of the features.
 We have a FeatureInfo as part of the dvt parse, but we need to extend
@@ -115,3 +115,28 @@ and milestone status as well.
     - Collect Milestone info in Concept.dvt
 
 At some point, dvt editing is needed instead of hacking at text files.
+
+###### 9/13
+small parts of the list above addressed, should now:
+- [ ] establish status and set as incomplete in current error state.
+- [ ] ditch the category idea and go with milestones that state this
+in free terms. More sprint-like.
+- [ ] restate devsteps as milestones. Name just one maybe.
+- [ ] milestones need to expand to objectives.
+List these under `objectives` kind of like the todo example. remove
+existing tree we have.
+- [ ] Info panel shows objective info and lets us make a specification
+from the objective. This populates under the specification tree (again, remove
+the categories we have)
+- [ ] We then can fill out the specification form at that tree point.
+
+- [ ] We'll need to do some nav-like work to highlight a tree node
+and toggle the main displays to match.  For that matter, just
+get the tree to do this with clicking is a start.
+
+
+###### 9/16
+- Got some of milestone entry done
+- still need to actually add to the devSteps (or whatever canonical model we settle on)
+- open debate continues on the continuation of .dvt file usage
+- some decent additions to common.js for parent/child finding.

@@ -1,7 +1,7 @@
 
 <labeled-value>
     <div>
-        <span class="label">{props.title}</span><div class="value" style="width:{props.width};"><slot/></div>
+        <span class="label">{props.title || props.label}</span><div class="value" style="width:{props.width || '100%'};"><slot/>{props.value}</div>
     </div>
     <style>
         div.value {
@@ -25,10 +25,11 @@
             state: { },
             bound: {},
             onBeforeMount(props, state) {
-                cm = newCommon(this)
+              console.log(this.root.tagName, 'onBeforeMount', props, state)
+              cm = newCommon(this)
             },    
             onMounted(props, state) {
-                cm.bindComponent()
+              cm.bindComponent()
             },
             onBeforeUpdate(props, state) {              
             },

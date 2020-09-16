@@ -102,7 +102,7 @@ export class DeveritaeFile {
             const fname = this.readBlock('Feature Name')
             if(fname !== name) {
                 // console.error(`Feature Name in '${dvt}', "${fname}", is different than "${name}" in 'concept.dvt'`)
-                writeMessage('Error', `Feature Name in '${dvt}', "${fname}", is different than "${name}" in 'concept.dvt'`)
+                writeMessage('Error', `Feature Name in '${name+'.dvt'}', "${fname}", is different than "${name}" in 'concept.dvt'`)
             }
             const desc = this.readBlock('Description')
             const objectives = this.readItems(this.readBlock('Objectives'))
@@ -111,7 +111,7 @@ export class DeveritaeFile {
             out.objectives = objectives;
         } else {
             // console.error(`>>> ${dvt} file not found`)
-            writeMessage('Error', `${dvt} file not found`)
+            writeMessage('Error', `${name+'.dvt'} file not found`)
         }
         return out;
     }

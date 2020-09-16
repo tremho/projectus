@@ -123,13 +123,14 @@ async function main () {
         import {newCommon} from '../../Common';
         let cm;
         export default {
-            state: { },
+            state: {},
             bound: {},
-            onBeforeMount(props, state) {    
-                cm = newCommon(this)
+            onBeforeMount(props, state) {
+              cm = newCommon(this)
             },    
             onMounted(props, state) {
-                cm.bindComponent()
+              console.log(this.root.tagName, 'onMounted', props, state)
+              cm.bindComponent()
             },
             onBeforeUpdate(props, state) {              
             },

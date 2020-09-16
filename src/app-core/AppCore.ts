@@ -53,55 +53,78 @@ class AppCore {
             console.log('messages wired')
         })
     }
-    
-    private showObjectives(type) {
-        console.log('show '+type+' objectives')
+
+    private showInfo() {
+        this.model.setAtPath('uiElements.page', 'info')
     }
-    private showSpecifications(type) {
-        console.log('show '+type+' specifications')
+    private showMilestones() {
+        this.model.setAtPath('uiElements.page', 'milestones')
+    }
+    private showObjectives() {
+        this.model.setAtPath('uiElements.page', 'objectives')
+    }
+    private showSpecifications() {
+        this.model.setAtPath('uiElements.page', 'specifications')
     }
 
     public setupUIElements() {
         this.model.addSection('uiElements', {
+            page: 'info',
+            msState: 'display',
+            msEntry: {
+                name: '',
+                targetDate: null,
+                objectives: []
+            },
+            msSelected: {},
+            selectedNav: '',
             navTree: [
                 {
                     index: 0,
                     label: "Basic Info",
                     click: (e) => {
-                        console.log('Show Basic Info')                    
+                        this.showInfo();
                     }
-                },{
+                }, {
                     index: 1,
+                    label: "Milestones",
+                    click: (e) => {
+                        this.showMilestones()
+                    },
+                    items: []
+
+                },{
+                    index: 2,
                     label: "Objectives",
                     click: (e) => {
-                        this.showObjectives('General')  
-                    },   
-                    items: [
-                        {label: "Infrastructure", click: (e)=> {this.showObjectives('Infrastructure')}},
-                        {label: "Library/Utility", click: (e)=> {this.showObjectives('Library')}},
-                        {label: "Information Model", click: (e)=> {this.showObjectives('IM')}},
-                        {label: "Business Logic", click: (e)=> {this.showObjectives('BusinessLogic')}},
-                        {label: "User Interface", click: (e)=> {this.showObjectives('UI')}},
-                        {label: "External Tasks", click: (e)=> {this.showObjectives('External')}},
-                        {label: "Refactoring", click: (e)=> {this.showObjectives('Refactoring')}}
-                    ]
-                }, {
-                    index: 2,
-                    label: 'Specifications',
-                    click: (e) => {
-                        this.showSpecifications('General')
+                        this.showObjectives()
                     },
-                    items: [
-                        {label: "Infrastructure", click: (e)=> {this.showSpecifications('Infrastructure')}},
-                        {label: "Library/Utility", click: (e)=> {this.showSpecifications('Library')}},
-                        {label: "Information Model", click: (e)=> {this.showSpecifications('IM')}},
-                        {label: "Business Logic", click: (e)=> {this.showSpecifications('BusinessLogic')}},
-                        {label: "User Interface", click: (e)=> {this.showSpecifications('UI')}},
-                        {label: "External Tasks", click: (e)=> {this.showSpecifications('External')}},
-                        {label: "Refactoring", click: (e)=> {this.showSpecifications('Refactoring')}}
-                    ]
+                    items: []
+                    //     {label: "Infrastructure", click: (e)=> {this.showObjectives('Infrastructure')}},
+                    //     {label: "Library/Utility", click: (e)=> {this.showObjectives('Library')}},
+                    //     {label: "Information Model", click: (e)=> {this.showObjectives('IM')}},
+                    //     {label: "Business Logic", click: (e)=> {this.showObjectives('BusinessLogic')}},
+                    //     {label: "User Interface", click: (e)=> {this.showObjectives('UI')}},
+                    //     {label: "External Tasks", click: (e)=> {this.showObjectives('External')}},
+                    //     {label: "Refactoring", click: (e)=> {this.showObjectives('Refactoring')}}
+                    // ]
                 }, {
                     index: 3,
+                    label: 'Specifications',
+                    click: (e) => {
+                        this.showSpecifications()
+                    },
+                    items: []
+                    //     {label: "Infrastructure", click: (e)=> {this.showSpecifications('Infrastructure')}},
+                    //     {label: "Library/Utility", click: (e)=> {this.showSpecifications('Library')}},
+                    //     {label: "Information Model", click: (e)=> {this.showSpecifications('IM')}},
+                    //     {label: "Business Logic", click: (e)=> {this.showSpecifications('BusinessLogic')}},
+                    //     {label: "User Interface", click: (e)=> {this.showSpecifications('UI')}},
+                    //     {label: "External Tasks", click: (e)=> {this.showSpecifications('External')}},
+                    //     {label: "Refactoring", click: (e)=> {this.showSpecifications('Refactoring')}}
+                    // ]
+                }, {
+                    index: 4,
                     label: "Build Tools",
                     click: (e) => {
                         console.log('show build tools')
@@ -117,6 +140,8 @@ class AppCore {
         imrSingleton.subscribe(msgArray => {
             this.model.setAtPath('infoMessage.messages', msgArray)
         })
+
+        this.model.setAtPath('uiElements.selectedNav', 'x-0') // basic info
     }
 
     /**

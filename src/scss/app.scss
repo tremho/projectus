@@ -60,5 +60,13 @@ label {
 Define an offset for values that follow a label in a span.
  */
 .value {
+  display: inline-block;
   margin-left: 10px;
+}
+
+.milestone-panel-display {
+  height: 250px;
+  width: 100%;
+  background: white;
+  position: absolute;
 }

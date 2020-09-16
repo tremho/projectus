@@ -1,4 +1,4 @@
-<expandable-node>
+<expandable-node >
     <div onclick="{handleClick}"><span>{ props.label}</span>
         <span if="{ state.isBranch }">
             <span if="{state.open}" style="display: inline-block; width: 20px; text-align: right">-</span>
@@ -15,42 +15,53 @@
 
 
       export default {
-
+        bound: {},
         onBeforeMount (props, state) {
           cm = newCommon(this)
           this.state = {
             app: cm.getApp(),
             open: false,
             item: props.item,
+            label: props.label,
+            key: (props.key || 'x')+'-'+(typeof props.item.index !== undefined ? props.item.index : props.item.label),
             onClick: props.item.click,
             get isBranch () { return this.item.items ? this.item.items.length !== 0 : false }
           }
         },
+        onMounted(props, state) {
+          cm.bindComponent()
+          console.log('onMounted', this.bound)
+        },
+        onBeforeUpdate(props, state) {
+          const div = this.$('DIV')
+          div.style.background = (state.key === cm.getSelectedNav()) ? 'yellow' : 'none'
+        },
         handleClick: (e) => {
-          const self = cm.getComponent(e.srcElement)
-          console.log(self.root.tagName, 'handleClick')
-          if (self.state.onClick) {
-            self.state.onClick(e)
-          }
-          e.preventDefault()
-          e.stopPropagation()
-          if (self.state.isBranch) {
-            return self.state.open ? self.collapse(self) : self.expand(self)
-          }
-        },
+        const self = cm.getComponent(e.srcElement)
+        console.log(self.root.tagName, 'handleClick')
+        cm.setSelectedNav(self.state.key)
+        if (self.state.onClick) {
+          self.state.onClick(e)
+        }
+        e.preventDefault()
+        e.stopPropagation()
+        if (self.state.isBranch) {
+          return self.state.open ? self.collapse(self) : self.expand(self)
+        }
+      },
         expand: (self) => {
-          if (!self.state.open) {
-            // console.log('expand')
-            self.state.open = true
-          }
-          self.update()
-        },
+        if (!self.state.open) {
+          // console.log('expand')
+          self.state.open = true
+        }
+        self.update()
+      },
         collapse: (self) => {
-          // console.log('collapse')
-          const branch = cm.getComponent(self.$('tree-view'));
-          self.state.open = false
-          if (branch) branch.unmount()
-          self.update()
+            // console.log('collapse')
+            const branch = cm.getComponent(self.$('tree-view'));
+            self.state.open = false
+            if (branch) branch.unmount()
+            self.update()
         }
       }
     </script>

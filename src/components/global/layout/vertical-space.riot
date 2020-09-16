@@ -1,0 +1,33 @@
+
+<vertical-space>
+    <div>
+
+    </div>
+    <style>    
+    </style>
+    <script>
+        import {newCommon} from '../../Common';
+        let cm;
+        export default {
+            state: { },
+            bound: {},
+            onBeforeMount(props, state) {    
+              cm = newCommon(this)
+            },
+            onMounted(props, state) {
+              console.log(this.root.tagName, 'onMounted', props, state)
+              cm.bindComponent()
+              const div = this.$('DIV')
+              div.style.height = props.height;
+            },
+            onBeforeUpdate(props, state) {              
+            },
+            onUpdated(props, state) {              
+            },
+            onBeforeUnmount(props, state) {              
+            },
+            onUnmounted(props, state) {              
+            }
+    }
+    </script>
+</vertical-space>    

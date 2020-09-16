@@ -16,15 +16,17 @@
     <form onsubmit={ add }>
         <input onkeyup={ edit } value={ state.text } />
         <button disabled={ !state.text }>
-            Add #{ state.items.length + 1 }
+            Add {state.addlabel} #{ state.items.length + 1 }
         </button>
     </form>
 
     <script>
       export default {
         onBeforeMount(props, state) {
+          console.log(this.root.tagName, 'onBeforeMount', props, state)
           // initial state
           this.state = {
+            addlabel: props.addlabel || '',
             items: props.items,
             text: ''
           }
@@ -56,6 +58,9 @@
           el.style.color = item.done ? 'red' : ''
           // trigger a component update
           this.update()
+        },
+        getItems() {
+          return this.state.items;
         }
       }
     </script>

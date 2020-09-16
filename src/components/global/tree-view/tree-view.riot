@@ -1,11 +1,12 @@
 <tree-view>
-    <div>
+    <div selected="{props.selected}">
     <expandable-node each={ item in model }
+                     selected="Objectives"
                      item={item} id="{ key }-{ item.index || item.label }"
                      label="{item.label}"
                      click="{item.click}"
     >
-        <tree-view if="{item.items}" model={item.items} key="{nextKey()}}"/>
+        <tree-view if="{item.items}" model={item.items} key="{nextKey()}"/>
     </expandable-node>
     </div>
     <script>
@@ -16,17 +17,20 @@
       export default {
         onBeforeMount(props, state) {
           if(!this.model && props.model) this.model = props.model;
-          // console.log(this.root.tagName, 'onBeforeMount', this.model)
+          if(!this.selected && props.selected) this.selected = props.selected;
+          console.log(this.root.tagName, 'onBeforeMount', props, state, this.model)
           this.nextKey = nextKey;
           this.key = props.key || nextKey()
         },
         onMounted(props, state) {
           if(!this.model && props.model) this.model = props.model;
-          // console.log(this.root.tagName, 'onMounted', this.model)
+          if(!this.selected && props.selected) this.selected = props.selected;
+          console.log(this.root.tagName, 'onMounted', props, state)
         },
         onBeforeUpdate(props, state) {
           if(!this.model && props.model) this.model = props.model;
-          // console.log(this.root.tagName, 'onBeforeUpdate', this.model)
+          if(!this.selected && props.selected) this.selected = props.selected;
+          console.log(this.root.tagName, 'onBeforeUpdate', props, state)
         }
 
       }

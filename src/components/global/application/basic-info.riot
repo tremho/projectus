@@ -1,3 +1,30 @@
-<basic-info>
 
+<basic-info>
+    <div>
+        basic info page stub
+    </div>
+    <style>
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: { },
+        bound: {},
+        onBeforeMount(props, state) {
+          cm = newCommon(this)
+        },
+        onMounted(props, state) {
+          cm.bindComponent()
+        },
+        onBeforeUpdate(props, state) {
+        },
+        onUpdated(props, state) {
+        },
+        onBeforeUnmount(props, state) {
+        },
+        onUnmounted(props, state) {
+        }
+      }
+    </script>
 </basic-info>

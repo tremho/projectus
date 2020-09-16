@@ -55,18 +55,78 @@ class Common {
    */
   getComponent(el)
   {
-    if(!el) return null;
-    let syms;
-    do {
-      syms = Object.getOwnPropertySymbols(el)
-      if (syms.length === 0) {
-        el = el.parentElement
-      }
-    } while (syms.length === 0)
+    try {
+      let syms;
+      do {
+        syms = Object.getOwnPropertySymbols(el)
+        if (syms.length === 0) {
+          el = el.parentElement
+        }
+      } while (syms.length === 0)
 
-    const comp = el[syms[0]]
-    return comp
+      const comp = el[syms[0]]
+      return comp
+    } catch(e) {
+      console.warn(e)
+      return null;
+    }
   }
+
+  /**
+   * Returns the component that is the optionally named ancestor of the given component
+   * @param {riot-component} comp - component that is child of parent sought
+   * @param {string} [tag]  - optional tag to find in ancestry tree, or immediate parent if not given.
+   * @returns {riot-component}
+   */
+  getComponentParent(comp, tag) {
+    if(!comp) return null;
+    tag = (tag && tag.toUpperCase())
+    while(comp) {
+      comp = this.getComponent(comp.root.parentElement)
+      if(!tag || comp.root.tagName === tag) {
+        return comp;
+      }
+    }
+    return null; // not found.
+  }
+
+  /**
+   * returns the component that is the child of the given component of the given tag,
+   * optionally the given ordinal occurrence.
+   * @param {riot-component} comp - component that has the child we seek
+   * @param {string} tag - tag name of child, or other selector string (e.g. '#child-id')
+   * @param ordinal - optional  ordinal (starting with 1) to choose if there are multiple children with this tag
+   * @returns {riot-component}
+   */
+  getComponentChild(comp, tag, ordinal = 1) {
+    const results = comp.$$(tag)
+    const pick = ordinal - 1
+    return this.getComponent(results[pick])
+  }
+
+  /**
+   * Find the child component that owns the given element
+   * @param {riot-component} containingComp - component that we are searching within
+   * @param {HTMLElement} element - element we are searching for
+   * @returns {number} the index of the child in the parent, or -1 if not found
+   */
+  findChildIndexWithElement(containingComp, element) {
+    let p = containingComp.root
+    if(p.firstElementChild.tagName === 'DIV') {
+      p = p.firstElementChild;
+    }
+    let children = p.children
+    let index = -1;
+    for (let i=0; i<children.length; i++) {
+      if(children[i] === element) {
+        index = i
+        break;
+      }
+    }
+    return index
+
+  }
+
 
   /**
    * return the DOM element of the <div> container that all of our Riot components consist of
@@ -199,19 +259,22 @@ class Common {
   bindComponent() {
     const component = this.riot
     if(!component.bound) component.bound = {}
-    function doBind(bind) {
-      if(bind) {
-        const [section, name] = bind.split('.')
-        model.bind(section, name, (prop, value, old) => {
-          const upd = component.bound
-          let doUpdate = upd[prop] !== old || upd[prop] !== value
-          upd[prop] = value
-          if (doUpdate) {
-            component.bound = upd;
-            component.update()
-          }
+    function doBind(bindSet) {
+      if(bindSet) {
+        const bindPaths = bindSet.split(',')
+        bindPaths.forEach(bpath => {
+          const [section, name] = bpath.trim().split('.')
+          model.bind(section, name, (prop, value, old) => {
+            const upd = component.bound
+            let doUpdate = upd[prop] !== old || upd[prop] !== value
+            upd[prop] = value
+            if (doUpdate) {
+              component.bound = upd;
+              component.update()
+            }
+          })
+          component.bound[name] = model.getAtPath(bpath)
         })
-        component.bound[name] = model.getAtPath(bind)
       }
     }
     const div = this.getContainer() // component.$('DIV')
@@ -224,6 +287,13 @@ class Common {
       doBind(child.getAttribute('bind'))
     }
     component.update()
+  }
+
+  setSelectedNav(label) {
+    this.getApp().model.setAtPath('uiElements.selectedNav', label)
+  }
+  getSelectedNav() {
+    return this.getApp().model.getAtPath('uiElements.selectedNav')
   }
 
   formatDate(dtIn, format) {

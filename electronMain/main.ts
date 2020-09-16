@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, dialog } from 'electron'
 import * as path from 'path'
 
 console.log('Launching Electron App\n')
@@ -46,6 +46,129 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit()
 })
+
+const isMac = process.platform === 'darwin'
+
+const template = [
+    // { role: 'appMenu' }
+    ...(isMac ? [{
+        label: 'Deveritae', //app.name, // TODO: will say 'Electron' until packaging, apparently.
+        submenu: [
+            // { role: 'about' },
+            {
+                // label: app.name,
+                label: 'About Deveritae',
+                // Custom about
+                click: function (item, focusedWindow) {
+                    if (focusedWindow) {
+                        const options = {
+                            type: 'info',
+                            title: 'About Deveritae',
+                            buttons: ['Ok'],
+                            message: 'Deveritae is a work in progress (c) 2020, Tremho Berserker Development, LLC'
+                        }
+                        dialog.showMessageBox(focusedWindow, options)
+                    }
+                }
+            },
+
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideothers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+        ]
+    }] : []),
+    // { role: 'fileMenu' }
+    {
+        label: 'File',
+        submenu: [
+            { label: 'Attach Project'},
+            { label: 'New Project'},
+            { type: 'separator'},
+            isMac ? { role: 'close' } : { role: 'quit' }
+        ]
+    },
+    // { role: 'editMenu' }
+    {
+        label: 'Edit',
+        submenu: [
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            ...(isMac ? [
+                { role: 'pasteAndMatchStyle' },
+                { role: 'delete' },
+                { role: 'selectAll' },
+                { type: 'separator' },
+                {
+                    label: 'Speech',
+                    submenu: [
+                        { role: 'startspeaking' },
+                        { role: 'stopspeaking' }
+                    ]
+                }
+            ] : [
+                { role: 'delete' },
+                { type: 'separator' },
+                { role: 'selectAll' }
+            ])
+        ]
+    },
+    // { role: 'viewMenu' }
+    {
+        label: 'View',
+        submenu: [
+            { role: 'reload' },
+            { role: 'forcereload' },
+            { role: 'toggledevtools' },
+            { type: 'separator' },
+            { role: 'resetzoom' },
+            { role: 'zoomin' },
+            { role: 'zoomout' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' }
+        ]
+    },
+    // { role: 'windowMenu' }
+    {
+        label: 'Window',
+        submenu: [
+            { role: 'minimize' },
+            { role: 'zoom' },
+            ...(isMac ? [
+                { type: 'separator' },
+                { role: 'front' },
+                { type: 'separator' },
+                { role: 'window' }
+            ] : [
+                { role: 'close' }
+            ])
+        ]
+    },
+    {
+        role: 'help',
+        submenu: [
+            {
+                label: 'Learn More',
+                click: async () => {
+                    const { shell } = require('electron')
+                    await shell.openExternal('https://electronjs.org')
+                }
+            }
+        ]
+    }
+]
+
+// @ts-ignore
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
