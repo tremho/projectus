@@ -1,0 +1,68 @@
+
+<milestone-page>
+    <div bind="concept.devSteps,uiElements.navTree,uiElements.msState">
+        <labeled-value label="page name" value="milestone-page stub" width="200px"/>
+        <grid-layout
+            grid-template-columns = "repeat(3, 1fr)"
+            grid-template-rows = "auto"
+            area-row-1 = "t d d">
+            <grid-section area="t">
+                <labeled-value each="{item in state.items}" label="[ ]" value="{item.name}" width="200px" onclick="{selectMilestone}"/>
+            </grid-section>
+            <grid-section area="d" background="white">
+
+                <!-- visibility toggled by uiElements.msState -->
+                <milestone-info-display/>
+                <milestone-entry-form/>
+
+            </grid-section>
+        </grid-layout>
+        <vertical-space height="20px"/>
+        <button if="{bound.msState === 'display'}" onclick="{addMilestone}">Add Milestone</button>
+    </div>
+    <style>    
+    </style>
+    <script>
+        import {newCommon} from '../../Common';
+        let cm;
+        export default {
+            state: {
+              items: []
+            },
+            bound: {},
+            selectMilestone(e) {
+              let el = e.srcElement
+              // find the melstone-page parent container
+              let comp = cm.getComponent(el) // labeled value
+              let section = cm.getComponentParent(comp)
+              let labelEl = comp.root;
+              comp = cm.getComponentParent(comp, 'milestone-page')
+              // find the index of the labeled-value that contains this element
+              let index = cm.findChildIndexWithElement(section, labelEl)
+              cm.getApp().model.setAtPath('uiElements.msSelected',comp.state.items[index])
+              cm.getApp().model.setAtPath('uiElements.msState', 'display')
+              comp.update()
+            },
+            addMilestone(e) {
+              cm.getApp().model.setAtPath('uiElements.msState', 'entry')
+            },
+            onBeforeMount(props, state) {    
+              cm = newCommon(this)
+              this.state.items = this.bound.devSteps
+            },    
+            onMounted(props, state) {
+              cm.bindComponent()
+              this.state.items = this.bound.devSteps
+            },
+            onBeforeUpdate(props, state) {
+              this.state.items = this.bound.devSteps || this.bound.navTree[1].items
+            },
+            onUpdated(props, state) {              
+            },
+            onBeforeUnmount(props, state) {              
+            },
+            onUnmounted(props, state) {              
+            }
+    }
+    </script>
+</milestone-page>    
