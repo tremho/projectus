@@ -63,3 +63,48 @@ for code or component modules to address an objective and show
     - like objectives, tree is organized by category / type
 
 - `Tools`: access a panel for buttons to run exposed build scripts         
+
+
+##### 9/17 concept tree data plan
+
+```
+concept = {
+    projectName
+    tagLine
+    devDescription
+    elevatorPitch
+    milestones // (formerly devSteps) 
+    [{ 
+          name
+          description
+          targetDateStart
+          targetDateEnd
+          objectives [{
+            title
+            specifications [{
+                UML {
+                    user stories
+                    arch attachments
+                    ==> UML diagrams generated
+                }
+                api {
+                    modules []
+                    reconcile: {
+                        ==> docs (w/js doc coverage info) 
+                        ==> tests generated
+                        ==> test update tracking data
+                    }
+                }
+          }]
+    }]
+```
+
+check out [InchJS](http://rrrene.org/inchjs/) for an interesting alternative
+to JSDoc as the doc engine and coverage reporter.
+
+riot framework already has embraced (and installed) [Instanbul](https://istanbul.js.org) [nyc] so 
+we are preset to run with that when ready.
+
+
+
+

@@ -160,5 +160,14 @@ class AppCore {
             })
         })
     }
+
+    public enterNewMilestone(milestoneInfo) {
+        console.log("==> DEBUG HERE FOR A GOOD TIME")
+        const milestones = this.model.getAtPath('concept.milestones')
+        milestones.push(milestoneInfo)
+        this.model.setAtPath('concept.milestones', milestones)
+        // name, description, target start and end dates
+        // move its objectives into the objectives array with empty specifications array
+    }
 }
 

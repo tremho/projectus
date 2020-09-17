@@ -28,16 +28,18 @@
             enterMilestone(e) {
               const comp = cm.getComponent(e.srcElement)
               console.log('got entry component', comp)
-              const todo = cm.getComponentChild('todo')
+              const todo = cm.getComponentChild(comp,'todo')
               console.log('got todo component', todo)
               const objectives = todo.getItems()
               // gather the info
               const msInfo = {
                 name: document.getElementById('msName').value,
-                targetDate: document.getElementById('msDate').value,
+                targetDateEnd: document.getElementById('msDate').value,
+                targetDateStart: new Date(), // TODO
                 objectives
               }
               console.log('milestone data to enter: ', msInfo)
+              cm.getApp().enterNewMilestone(msInfo)
               this.cancel();
             },
             getVisibility() {

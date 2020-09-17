@@ -4,6 +4,7 @@ import * as fs from 'fs'
 
 export function projectDiscovery(rootPath) {
 
+
     if(!rootPath) rootPath = __dirname
     console.log("discovering from root path = ", rootPath)
 

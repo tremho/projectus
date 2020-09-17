@@ -140,3 +140,12 @@ get the tree to do this with clicking is a start.
 - still need to actually add to the devSteps (or whatever canonical model we settle on)
 - open debate continues on the continuation of .dvt file usage
 - some decent additions to common.js for parent/child finding.
+
+###### 9/17
+
+- [X] Now entering a new milestone
+- [ ] Need to capture description
+- [ ] info and entry should be basically the same so we can edit info
+- [ ] echo milestones and objectives in the nav tree
+
+ 

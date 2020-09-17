@@ -1,6 +1,6 @@
 
 <milestone-page>
-    <div bind="concept.devSteps,uiElements.navTree,uiElements.msState">
+    <div bind="concept.milestones,uiElements.navTree,uiElements.msState">
         <labeled-value label="page name" value="milestone-page stub" width="200px"/>
         <grid-layout
             grid-template-columns = "repeat(3, 1fr)"
@@ -48,14 +48,14 @@
             },
             onBeforeMount(props, state) {    
               cm = newCommon(this)
-              this.state.items = this.bound.devSteps
+              this.state.items = this.bound.milestones
             },    
             onMounted(props, state) {
               cm.bindComponent()
-              this.state.items = this.bound.devSteps
+              this.state.items = this.bound.milestones
             },
             onBeforeUpdate(props, state) {
-              this.state.items = this.bound.devSteps || this.bound.navTree[1].items
+              this.state.items = this.bound.milestones
             },
             onUpdated(props, state) {              
             },

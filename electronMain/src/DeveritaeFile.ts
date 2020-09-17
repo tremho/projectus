@@ -2,23 +2,11 @@
 import * as path from 'path'
 import * as fs from 'fs'
 import {AppGateway} from "./AppGateway";
+import {ConceptInfo, MilestoneInfo} from "../../src/data-type/ConceptTypes"
 
 
 function writeMessage(subject:string, message:string) {
     AppGateway.sendMessage('IM',{subject, message})
-}
-
-class FeatureInfo {
-    public name: string;
-    public description: string;
-    public objectives: string[];
-}
-class ConceptInfo {
-    public projectName:string = ''
-    public devDescription:string = ''
-    public tagLine:string = ''
-    public elevatorPitch:string = ''
-    public devSteps: FeatureInfo[] = []
 }
 
 export class DeveritaeFile {
@@ -82,11 +70,15 @@ export class DeveritaeFile {
             this.concept.devDescription = this.readBlock('Project Development Description')
             this.concept.tagLine = this.readBlock('Product tagline')
             this.concept.elevatorPitch = this.readBlock('Elevator Pitch')
-            let stepItems = this.readItems(this.readBlock('Development Steps'))
+            let stepItems = this.readItems(this.readBlock('Development Milestones'))
             stepItems.forEach(item => {
-                this.concept.devSteps.push({
+                let startDate = new Date(); // TODO: parse dates from item as in: Milestone 1 (Aug 1, 2020 - Aug 31, 2020)
+                let endDate = new Date();
+                this.concept.milestones.push({
                     name: item,
                     description: '',
+                    targetDateStart: startDate,
+                    targetDateEnd: endDate,
                     objectives: []
                 })
             })
@@ -94,8 +86,8 @@ export class DeveritaeFile {
         }
     }
     // read and parse a feature dvt file
-    readFeature(name:string) : FeatureInfo {
-        const out: FeatureInfo = new FeatureInfo()
+    readFeature(name:string) : MilestoneInfo {
+        const out: MilestoneInfo = new MilestoneInfo()
         const dvt = path.join(this.dvtRoot, name+'.dvt')
         if(fs.existsSync(dvt)) {
             this.text = fs.readFileSync(dvt).toString()
@@ -118,7 +110,7 @@ export class DeveritaeFile {
 
     parseTree() {
         this.readConcept()
-        this.concept.devSteps.forEach(step => {
+        this.concept.milestones.forEach(step => {
             const fi = this.readFeature(step.name)
             step.description = fi.description
             step.objectives = fi.objectives
