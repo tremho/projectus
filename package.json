@@ -18,12 +18,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
     "flatpickr": "^4.6.6",
     "js-datepicker": "^5.16.0",
     "riot": "^4.13.5"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.14.0",
     "@riotjs/compiler": "^4.10.1",
     "@riotjs/ssr": "^5.0.0",
     "@riotjs/webpack-loader": "^4.0.3",
