@@ -18,7 +18,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "flatpickr": "^4.6.6",
     "js-datepicker": "^5.16.0",
     "riot": "^4.13.5"
   },
