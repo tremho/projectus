@@ -2,10 +2,12 @@
 import * as path from 'path'
 import * as fs from 'fs'
 
+let discoveryPath = ''
+
 export function projectDiscovery(rootPath) {
 
-
     if(!rootPath) rootPath = __dirname
+    discoveryPath = rootPath;
     console.log("discovering from root path = ", rootPath)
 
     // assign score of one point per piece of evidence. This may help aid disambigutions later.
@@ -111,6 +113,7 @@ export function projectDiscovery(rootPath) {
         topLevelInfo.projectFramework = 'ThunderBolt'
     }
 
+    console.log('>>>> topLevelInfo', topLevelInfo)
     return topLevelInfo;
 }
 
@@ -138,4 +141,72 @@ function countMatches(array:string[], match:RegExp | string) {
         if(str.match(match)) count++
     })
     return count
+}
+
+export function writeBackTopLevel(topLevelInfo) {
+
+    let rootPath = discoveryPath // write back where we read in from
+
+    if(topLevelInfo.devTechTypes.indexOf('npm') !== -1) {
+        let packageJson;
+        let pkgPath = path.join(rootPath, 'package.json')
+        if (fs.existsSync(pkgPath)) {
+            const contents = fs.readFileSync(pkgPath).toString()
+            if (contents) {
+                try {
+                    packageJson = JSON.parse(contents)
+                } catch (e) {
+                    console.error('invalid package.json: ', e)
+                }
+            }
+        }
+        let write = false;
+        if (topLevelInfo.projectName && topLevelInfo.projectName !== packageJson.name) {
+            packageJson.name = topLevelInfo.projectName;
+            write = true;
+        }
+        if (topLevelInfo.projectVersion && topLevelInfo.projectVersion !== packageJson.version) {
+            packageJson.version = topLevelInfo.projectVersion;
+            write = true;
+        }
+        if (topLevelInfo.projectDescription && topLevelInfo.projectDescription !== packageJson.description) {
+            packageJson.description = topLevelInfo.projectDescription;
+            write = true;
+        }
+        if(write) {
+            fs.writeFileSync(pkgPath, JSON.stringify(packageJson, null, 2))
+        }
+
+        // if we have a ThunderBolt framework, write this info to Electron app package too.
+        if(topLevelInfo.projectFramework === 'ThunderBolt') {
+            pkgPath = path.join(rootPath, 'electronMain', 'package.json')
+            if (fs.existsSync(pkgPath)) {
+                const contents = fs.readFileSync(pkgPath).toString()
+                if (contents) {
+                    try {
+                        packageJson = JSON.parse(contents)
+                    } catch (e) {
+                        console.error('invalid package.json: ', e)
+                    }
+                }
+            }
+            let write = false;
+            if (topLevelInfo.projectName && topLevelInfo.projectName !== packageJson.name) {
+                packageJson.name = topLevelInfo.projectName;
+                write = true;
+            }
+            if (topLevelInfo.projectVersion && topLevelInfo.projectVersion !== packageJson.version) {
+                packageJson.version = topLevelInfo.projectVersion;
+                write = true;
+            }
+            if (topLevelInfo.projectDescription && topLevelInfo.projectDescription !== packageJson.description) {
+                packageJson.description = topLevelInfo.projectDescription;
+                write = true;
+            }
+            if (write) {
+                fs.writeFileSync(pkgPath, JSON.stringify(packageJson, null, 2))
+            }
+        }
+    }
+
 }

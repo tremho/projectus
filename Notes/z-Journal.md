@@ -144,8 +144,63 @@ get the tree to do this with clicking is a start.
 ###### 9/17
 
 - [X] Now entering a new milestone
-- [ ] Need to capture description
-- [ ] info and entry should be basically the same so we can edit info
-- [ ] echo milestones and objectives in the nav tree
+- [X] Need to capture description
+- [X] info and entry should be basically the same so we can edit info
 
+- ::: Adding a new milestone isn't working right
+- ::: Layout formatting sucks.  Form-view aspect sucks.
+
+---
+- [X] need to clear all fields in ms edit on external update
+    - this is weird.
+    The todo fields clear on the static items (from dvt) but if I add
+    objectives to any milestone, that list persists for all entries.
+    If it's a generation thing, why doesn't it do that for first steps?
+    Is it the update thing I did in todo? [doesn't seem to be]
+    
+    
+- [X] ms page list needs to persist highlight, use different roll-over 
+- [ ] toggle input control style with click in, and off with change or
+click on non-control.
  
+ ---- 
+ Okay, so the styling still needs work.  Should move some items to
+ the right, for example, and make the update button automatic.
+ 
+ But let's move on now to objectives and specs, shall we?
+ 
+ ###### 9/19
+ 
+ - first, write out dvt files so we get persistence and
+ can create new lists.
+ - [X] put an update button in header block that triggers
+ our verity actions.  put the dvt write-out here.
+ 
+ ###### 9/20
+ Cooliomente
+ 
+ - Objectives page stubbed enough to bring up the use-case entry
+ form. Need to populate this, but noted the steps in the placeholder.
+ 
+ - Will need to add to model (and persist) the collection of
+ stereotypes and packages defined.
+ 
+- Generation of UML diagrams will be interesting, but it's still a bit off.
+
+- We can generate code modules, but as an intermediate, generate API
+definition blocks to later use to reconcile. Also used to repopulate the 
+API def entry form.
+
+- We can then later check the def blocks to the actual implemented
+API and see if they are out of sync.
+
+
+##### 9/23
+
+- recording Collections for useCaseAssets; this is good.
+- recording scenarios... good but needs changes
+- We want to list objectives by title in the {showObj} place
+- We want to associate this objective title to any use cases
+- Scenarios should be stored in the model under the objective
+- should be persisted as part of the objective, not scenarios.dvt
+

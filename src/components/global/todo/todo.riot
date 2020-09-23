@@ -1,3 +1,6 @@
+<!--
+Modified version of classic Riot example
+-->
 <todo>
     <h3>{ props.title }</h3>
 
@@ -8,7 +11,7 @@
                         type="checkbox"
                         checked={ item.done }
                         onclick={ (e) => toggle(e, item) } />
-                { item.title }
+                { item[props.field || 'title'] || item }
             </label>
         </li>
     </ul>
@@ -31,9 +34,17 @@
             text: ''
           }
         },
+        onBeforeUpdate(props, state) {
+          // console.log(this.root.tagName, 'onBeforeUpdate', props, state)
+          if(!state.updating) {
+            // clear if we have an update that is not from our own doing
+            state.items = props.items
+          }
+        },
         edit(e) {
           // update only the text state
           this.update({
+            updating: true,
             text: e.target.value
           })
         },
@@ -42,6 +53,7 @@
 
           if (this.state.text) {
             this.update({
+              updating: true,
               items: [
                 ...this.state.items,
                 // add a new item
@@ -57,10 +69,10 @@
           el.height = item.done ? '30px' : ''
           el.style.color = item.done ? 'red' : ''
           // trigger a component update
-          this.update()
+          this.update({updating:true})
         },
         getItems() {
-          return this.state.items;
+          return this.state.items
         }
       }
     </script>

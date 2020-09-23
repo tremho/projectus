@@ -7,16 +7,21 @@ export function getApp() {
   return app;
 }
 export function getComponent(el) {
-  let syms;
-  do {
-    syms = Object.getOwnPropertySymbols(el)
-    if(syms.length === 0) {
-      el = el.parentElement
-    }
-  } while(syms.length === 0)
+  try {
+    let syms;
+    do {
+      syms = Object.getOwnPropertySymbols(el)
+      if (syms.length === 0) {
+        el = el.parentElement
+      }
+    } while (syms.length === 0)
 
-  const comp = el[syms[0]]
-  return comp
+    const comp = el[syms[0]]
+    return comp
+  } catch(e) {
+    console.warn(e)
+    return null;
+  }
 }
 
 
@@ -55,21 +60,7 @@ class Common {
    */
   getComponent(el)
   {
-    try {
-      let syms;
-      do {
-        syms = Object.getOwnPropertySymbols(el)
-        if (syms.length === 0) {
-          el = el.parentElement
-        }
-      } while (syms.length === 0)
-
-      const comp = el[syms[0]]
-      return comp
-    } catch(e) {
-      console.warn(e)
-      return null;
-    }
+    return getComponent(el)
   }
 
   /**
@@ -112,7 +103,7 @@ class Common {
    */
   findChildIndexWithElement(containingComp, element) {
     let p = containingComp.root
-    if(p.firstElementChild.tagName === 'DIV') {
+    while(p.firstElementChild.tagName === 'DIV') {
       p = p.firstElementChild;
     }
     let children = p.children
@@ -263,14 +254,21 @@ class Common {
       if(bindSet) {
         const bindPaths = bindSet.split(',')
         bindPaths.forEach(bpath => {
+
+          const updateAlways = (bpath.charAt(0) === '!')
+          if(updateAlways) {
+            bpath = bpath.substring(1); // skip the !
+          }
           const [section, name] = bpath.trim().split('.')
-          model.bind(section, name, (prop, value, old) => {
+          model.bind(section.trim(), name.trim(), (prop, value, old) => {
             const upd = component.bound
-            let doUpdate = upd[prop] !== old || upd[prop] !== value
+            let doUpdate = updateAlways || upd[prop] !== old || upd[prop] !== value
             upd[prop] = value
             if (doUpdate) {
-              component.bound = upd;
-              component.update()
+              try {
+                component.bound = upd;
+                component.update()
+              } catch(e) {}
             }
           })
           component.bound[name] = model.getAtPath(bpath)
@@ -297,15 +295,10 @@ class Common {
   }
 
   formatDate(dtIn, format) {
-    let db = true
+
     let sdf = new SimpleDateFormat(dtIn)
     if(format) sdf.setFormat(format)
-    console.log('do your debugging here')
-    let rt = "foobar"
-    if(db) {
-      rt = sdf.toString()
-    }
-    return rt
+    return sdf.toString()
   }
 }
 

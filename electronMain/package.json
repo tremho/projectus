@@ -1,7 +1,7 @@
 {
-  "name": "deveritae-electron",
-  "version": "1.0.0",
-  "description": "Deveritae main process / Electron launcher. Based on GitHub's electron-quick-start demo.",
+  "name": "deveritae",
+  "version": "0.0.0",
+  "description": "Project development management tool",
   "main": "build/electronMain/main.js",
   "scripts": {
     "start": "tsc; electron .",

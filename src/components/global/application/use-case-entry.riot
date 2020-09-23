@@ -1,0 +1,83 @@
+
+<use-case-entry>
+    <div>
+        <p>Who (or what) does this use-case involve?</p>
+        <flex-layout orientation="horizontal" justify="flex-start">
+            <drop-down
+                    hint="Choose Actor"
+                    items="{getActors()}"
+            />
+            <drop-down
+                    hint="Assign Role"
+                    items="{getRoles()}"
+            />
+        </flex-layout>
+        <p>Name the scenario:</p>
+        <input type="text" size="47"/><br/>
+        <p>What is the outcome of this action?</p>
+        <input type="text" size="47"/><br/>
+        <p>What part of the project does this belong?</p>
+        <drop-down
+                hint="Name Package"
+                items="{getPackages()}"
+        />
+        <blank-space height="30px"/>
+        <button onclick="{enterCase}">Okay</button>
+    </div>
+    <style>
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: {},
+        bound: {},
+        onBeforeMount(props, state) {
+          cm = newCommon(this)
+        },
+        onMounted(props, state) {
+          console.log(this.root.tagName, 'onMounted', props, state)
+          cm.bindComponent()
+        },
+        onBeforeUpdate(props, state) {
+        },
+        onUpdated(props, state) {
+        },
+        onBeforeUnmount(props, state) {
+        },
+        onUnmounted(props, state) {
+        },
+        getActors() {
+          // return ['Alice', 'Bob', 'Carol', 'Doug', 'Erwin', 'Fred', 'Giorgio', 'Harold', 'Ingrid', 'Jessica', 'Kate', 'Larry', 'Moe', 'Norman', 'Oscar']
+          const actors = cm.getApp().model.getAtPath('useCase.actors')
+          console.log('actors', actors)
+          return actors
+        },
+        getRoles() {
+          // return ['User', 'Service', 'Partner', 'Hardware']
+          return cm.getApp().model.getAtPath('useCase.roles')
+        },
+        getPackages() {
+          // return ['Login', 'Browsing', 'Orders', 'Tracking', 'Promotions', 'Returns']
+          return cm.getApp().model.getAtPath('useCase.packages')
+        },
+        enterCase() {
+          const app = cm.getApp()
+          const ins = this.$$('input')
+          const actor = ins[0].value
+          app.addNewUseCaseActor(actor)
+          const role = ins[1].value
+          app.addNewUseCaseRole(role)
+          const scenario = ins[2].value
+          const outcome = ins[3].value
+          const pkg = ins[4].value
+          app.addNewUseCasePackage(pkg)
+          const caseData = {
+            actor, role, pkg, scenario, outcome
+          }
+          console.log('entering case ', caseData)
+          app.addUseCaseScenario(caseData)
+        }
+      }
+    </script>
+</use-case-entry>    

@@ -1,7 +1,6 @@
 <tree-view>
     <div selected="{props.selected}">
     <expandable-node each={ item in model }
-                     selected="Objectives"
                      item={item} id="{ key }-{ item.index || item.label }"
                      label="{item.label}"
                      click="{item.click}"

@@ -1,0 +1,186 @@
+
+<milestone-edit-info>
+    <div class="milestone-panel-display" bind="uiElements.msSelected">
+        <span class="label">Name:</span><input id="msName" style="width:300px;" type="text" class="value"
+               value="{getMilestoneName()}"
+               onchange="{onNameChange}"
+        /><br/>
+        <span class="label">Description:</span><textarea id="msDesc" class="value"
+                                               value="{state.milestone.description}"
+                                               onchange="{onNameChange}"
+        /><br/>
+        <br/><span class="label value">Target Start Date:</span><date-picker id="msDateStart"
+             value="{getStartDate()}"
+             onSelect="{onStartDateSelect}"
+        />
+        <br/><span class="label value">Target End Date:</span><date-picker id="msDateEnd"
+             value="{getEndDate()}"
+             onSelect="{onEndDateSelect}"
+        />
+        <br/>
+        <blank-space height="20px"/>
+        <!-- customized version of to-do control placed inline -->
+        <div class="objective-window">
+        <ul>
+            <li each={ item in getMilestoneObjectives() }>
+                <label class={ item.done ? 'completed' : null }>
+                    <input
+                            type="checkbox"
+                            checked={ item.done }
+                            onclick={ (e) => toggle(e, item) } />
+                    { item[props.field || 'title'] || item }
+                </label>
+            </li>
+        </ul>
+        </div>
+        <form onsubmit={ add }>
+            <input onkeyup={ edit } value={ state.text } />
+            <button disabled={ !state.text }>
+                Add Objective #{ getMilestoneObjectives().length + 1 }
+            </button>
+        </form>
+
+        <blank-space height="20px"/>
+        <button onclick="{enterMilestone}">Update Milestone</button>&nbsp;&nbsp;
+    </div>
+    <style>
+        #msDesc {
+            width: 390px;
+            height: 62px;
+        }
+        .milestone-panel-display {
+            height: 280px;
+            width: 500px;
+            background: white;
+            position: absolute;
+            border: 1px solid darkblue;
+        }
+
+        .objective-window {
+            overflow: scroll;
+            height: 120px;
+            width: 500px;
+            background-color: #d4ebf2;
+        }
+
+        ::-webkit-scrollbar {
+            -webkit-appearance: none;
+            width: 7px;
+          }
+        ::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, .5);
+            box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+          }
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      let app;
+
+      function syncState(state) {
+        const milestones = app.model.getAtPath('concept.milestones')
+        const index = app.model.getAtPath('uiElements.msSelectedIndex')
+        state.milestone = milestones[index] || {}
+      }
+
+      export default {
+        state: {
+          text: ''
+        },
+        bound: {},
+
+        edit(e) {
+          // update only the text state
+          this.update({
+            updating: true,
+            text: e.target.value
+          })
+        },
+        add(e) {
+          e.preventDefault()
+
+          if (this.state.text) {
+            this.getMilestoneObjectives().push({title: this.state.text})
+            this.update({
+              updating: true,
+              text: ''
+            })
+          }
+        },
+        getMilestoneName() {
+          return this.state.milestone.name;
+        },
+        getMilestoneObjectives() {
+          const objs = this.state.milestone.objectives || []
+          this.state.milestone.objectives = objs
+          return objs;
+        },
+        getStartDate() {
+          return this.state.milestone.targetDateStart;
+        },
+        getEndDate() {
+          return this.state.milestone.targetDateEnd;
+        },
+        onNameChange(e) {
+          console.log('onNameChange')
+          const comp = cm.getComponent(e.srcElement)
+          comp.state.edited = true;
+        },
+        onStartDateSelect(instance, date) {
+          const comp = cm.getComponent(e.srcElement)
+          comp.state.edited = true;
+          comp.state.milestone.targetDateStart = date
+          comp.update()
+        },
+        onEndDateSelect(instance, date) {
+          const comp = cm.getComponent(e.srcElement)
+          comp.state.edited = true;
+          comp.state.milestone.targetDateEnd = date
+          comp.update()
+        },
+        cancel() {
+           app.model.setAtPath('uiElements.msState', 'display')
+        },
+        enterMilestone(e) {
+          const objectives = this.getMilestoneObjectives()
+          // gather the info
+          const msInfo = {
+            name: document.getElementById('msName').value,
+            description: document.getElementById('msDesc').value,
+            targetDateEnd: document.getElementById('msDateEnd').value,
+            targetDateStart: document.getElementById('msDateStart').value,
+            objectives
+          }
+          // console.log('milestone data to enter: ', msInfo)
+          app.updateMilestone(msInfo)
+          this.cancel();
+        },
+        getVisibility() {
+          return 'visible'
+          // if(cm.getApp().model.getAtPath('uiElements.msState') === 'entry') return 'visible'
+          // return 'hidden'
+        },
+        onBeforeMount(props, state) {
+          console.log(this.root.tagName, 'onBeforeMount', props, state)
+          cm = newCommon(this)
+          app = cm.getApp()
+          syncState(state)
+        },
+        onMounted(props, state) {
+          // console.log(this.root.tagName, 'onMounted', props, state)
+          cm.bindComponent()
+        },
+        onBeforeUpdate(props, state) {
+          // console.log(this.root.tagName, 'onBeforeUpdate', props, state)
+          syncState(state)
+        },
+        onUpdated(props, state) {
+        },
+        onBeforeUnmount(props, state) {
+        },
+        onUnmounted(props, state) {
+        }
+      }
+    </script>
+</milestone-edit-info>

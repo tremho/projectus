@@ -3,6 +3,7 @@ import {AppModel} from "./AppModel";
 import {StringParser} from "../general/StringParser"
 
 import {getInfoMessageRecorder, InfoMessageRecorder} from "./InfoMessageRecorder";
+import {UseCaseInfo} from "../data-type/ConceptTypes";
 
 let imrSingleton:InfoMessageRecorder = getInfoMessageRecorder()
 
@@ -68,15 +69,11 @@ class AppCore {
     }
 
     public setupUIElements() {
+        console.log('>>> setupUIElements >>>')
         this.model.addSection('uiElements', {
             page: 'info',
             msState: 'display',
-            msEntry: {
-                name: '',
-                targetDate: null,
-                objectives: []
-            },
-            msSelected: {},
+            msSelectedIndex: -1,
             selectedNav: '',
             navTree: [
                 {
@@ -142,6 +139,22 @@ class AppCore {
         })
 
         this.model.setAtPath('uiElements.selectedNav', 'x-0') // basic info
+
+        return Promise.resolve(); // this is called as a promise
+    }
+    flatten(obj) {
+        const flatObj = {}
+        Object.getOwnPropertyNames(obj).forEach(prop => {
+
+            let value = obj[prop]
+            if( typeof value === 'object') {
+                if(!Array.isArray(value)) {
+                    value = this.flatten(value)
+                }
+            }
+            flatObj[prop] = value
+        })
+        return flatObj
     }
 
     /**
@@ -157,17 +170,93 @@ class AppCore {
             return mainApi.readConcept(this.rootPath).then(results => {
                 console.log('Concept Tree', results)
                 this.model.addSection('concept', results)
+
+                // set up the use-case conponents
+                return mainApi.readUseCaseAssets().then(useCaseAssets => {
+                    console.log('--- recording useCase collections', useCaseAssets)
+                    this.model.setAtPath('useCase', useCaseAssets, true)
+                })
             })
+
         })
     }
 
-    public enterNewMilestone(milestoneInfo) {
-        console.log("==> DEBUG HERE FOR A GOOD TIME")
+    public updateMilestone(milestoneInfo, atIndex) {
         const milestones = this.model.getAtPath('concept.milestones')
-        milestones.push(milestoneInfo)
-        this.model.setAtPath('concept.milestones', milestones)
-        // name, description, target start and end dates
-        // move its objectives into the objectives array with empty specifications array
+        if(typeof atIndex === 'undefined') {
+            atIndex = this.model.getAtPath('uiElements.msSelectedIndex')
+        }
+        if(milestones[atIndex]) {
+            // console.log('updating milestone index '+ atIndex)
+            milestones[atIndex] = milestoneInfo
+            this.model.setAtPath('concept.milestones', milestones)
+            this.model.setAtPath('uiElements.msSelectedIndex', atIndex)
+        }
     }
+
+    public performUpdateAction() {
+        console.log('performing verity update sweep')
+
+        // so... TLInfo updates should migrate to the correct files, per project type
+        // (e.g. package.json)
+
+        const topLevelInfo = this.flatten(this.model.getAtPath('topLevelInfo'))
+        const conceptTree = this.flatten(this.model.getAtPath('concept'))
+        const useCaseAssets = this.flatten(this.model.getAtPath('useCase'))
+
+        Promise.all([
+            mainApi.writeBackTopLevel(topLevelInfo),
+            mainApi.writeConcept(conceptTree),
+            mainApi.writeUseCaseAssets(useCaseAssets)
+        ]).then(() => {
+            console.log('finished with verity operations')
+        })
+    }
+    
+    public addNewUseCaseActor(actor:string) : boolean {
+        const actors = this.model.getAtPath('useCase.actors') || []
+        let add = actors.indexOf(actor) === -1
+        if(add) {
+            actors.push(actor)
+            actors.sort()
+            this.model.setAtPath('useCase.actors',actors, true)
+        }
+        return add
+    }
+
+    public addNewUseCaseRole(role:string) : boolean {
+        const roles = this.model.getAtPath('useCase.roles') || []
+        let add = roles.indexOf(role) === -1
+        if(add) {
+            roles.push(role)
+            roles.sort()
+            this.model.setAtPath('useCase.roles',roles, true)
+        }
+        return add
+    }
+
+    public addNewUseCasePackage(pckg:string) : boolean {
+        const packages = this.model.getAtPath('useCase.packages') || []
+        let add = packages.indexOf(pckg) === -1
+        if(add) {
+            packages.push(pckg)
+            packages.sort()
+            this.model.setAtPath('useCase.packages',packages, true)
+        }
+        return add
+    }
+
+    public addUseCaseScenario(caseData:UseCaseInfo) {
+        const scenarios = this.model.getAtPath('useCase.scenarios') ||[]
+        scenarios.push(caseData)
+        scenarios.sort((a,b)=>{
+            if(a.pkg.localeCompare(b.pkg) === 0) {
+                return a.scenario.localeCompare(b.scenario)
+            }
+            return a.pkg.localeCompare(b.pkg)
+        })
+        this.model.setAtPath('useCase.scenarios', scenarios, true)
+    }
+    
 }
 

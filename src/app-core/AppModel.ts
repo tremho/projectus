@@ -143,7 +143,7 @@ export class AppModel {
     }
 
     public setBind(bindPath:string, value:any) {
-        console.log('update bindPath', bindPath, value)
+        // console.log('update bindPath', bindPath, value)
         const p = bindPath.split('.')
         toModel(p[0], p[1], value)
     }

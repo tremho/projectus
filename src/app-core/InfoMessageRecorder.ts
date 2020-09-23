@@ -23,7 +23,7 @@ export class InfoMessageRecorder {
      * @private
      */
     private record(im:InfoMessage) {
-        console.log('recording IM', im)
+        // console.log('recording IM', im)
         while (this.recorded.length >= this.maxRecords) {
             this.recorded.shift()
         }
@@ -36,10 +36,10 @@ export class InfoMessageRecorder {
      * @private
      */
     private notify() {
-        console.log('notifying '+this.subscribers.length+' subscribers')
+        // console.log('notifying '+this.subscribers.length+' subscribers')
         this.subscribers.forEach(cb => {
             if(cb) {
-                console.log('calling subscriber...')
+                // console.log('calling subscriber...')
                 cb(this.recorded)
             }
         })

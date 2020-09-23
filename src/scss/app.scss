@@ -3,6 +3,13 @@ $normal-font:    Helvetica, sans-serif;
 $primary-color: #333;
 
 /**
+Use font auwesome
+ */
+$fa-font-path:        "../webfonts";
+@import "fa-scss/fontawesome.scss";
+@import "fa-scss/solid.scss";
+
+/**
 Apply defaults
  */
 body {
@@ -64,9 +71,3 @@ Define an offset for values that follow a label in a span.
   margin-left: 10px;
 }
 
-.milestone-panel-display {
-  height: 250px;
-  width: 100%;
-  background: white;
-  position: absolute;
-}

@@ -1,0 +1,38 @@
+
+<api-spec-entry>
+    <div>
+        api-spec-entry stub <br/>
+        <ol>
+            <li>Attach to corresponding use case</li>
+            <li>Assign a module to a scenario in a package</li>
+            <li>Create the API functions</li>
+            <li>Create the specification details for each api function</li>
+            <li>Update action will generate tests from the api specs</li>
+        </ol>
+    </div>
+    <style>
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: {},
+        bound: {},
+        onBeforeMount(props, state) {
+          cm = newCommon(this)
+        },
+        onMounted(props, state) {
+          console.log(this.root.tagName, 'onMounted', props, state)
+          cm.bindComponent()
+        },
+        onBeforeUpdate(props, state) {
+        },
+        onUpdated(props, state) {
+        },
+        onBeforeUnmount(props, state) {
+        },
+        onUnmounted(props, state) {
+        }
+      }
+    </script>
+</api-spec-entry>

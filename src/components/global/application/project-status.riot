@@ -1,3 +1,21 @@
 <projext-status>
     <p>project-status</p>
-</projext-status>
+    <button onclick="{doAction}">Update</button>
+    <style>
+    </style>
+    <script>
+      import {newCommon} from '../../Common';
+      let cm;
+      export default {
+        state: { },
+        bound: {},
+        onMounted(props, state) {
+          console.log(this.root.tagName, 'Mounted')
+          cm = newCommon(this)
+          cm.bindComponent()
+        },
+        doAction(e) {
+          cm.getApp().performUpdateAction()
+        }
+      }
+    </script></projext-status>

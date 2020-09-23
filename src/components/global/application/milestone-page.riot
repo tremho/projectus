@@ -1,33 +1,42 @@
 
 <milestone-page>
-    <div bind="concept.milestones,uiElements.navTree,uiElements.msState">
+    <div bind="concept.milestones,!uiElements.msSelectedIndex,uiElements.msState">
         <labeled-value label="page name" value="milestone-page stub" width="200px"/>
         <grid-layout
             grid-template-columns = "repeat(3, 1fr)"
             grid-template-rows = "auto"
             area-row-1 = "t d d">
-            <grid-section area="t">
-                <labeled-value each="{item in state.items}" label="[ ]" value="{item.name}" width="200px" onclick="{selectMilestone}"/>
-            </grid-section>
-            <grid-section area="d" background="white">
 
-                <!-- visibility toggled by uiElements.msState -->
-                <milestone-info-display/>
-                <milestone-entry-form/>
+            <grid-section area="t">
+
+                <labeled-value each="ms in getMilestones()"
+                               class="{ms.isSelected ? 'selected' :  ''}"
+                               label="[ ]"
+                               value="{ms.name}"
+                               width="200px" onclick="{selectMilestone}"/>
+
+            </grid-section>
+            <grid-section area="d">
+
+                <milestone-edit-info/>
 
             </grid-section>
         </grid-layout>
-        <vertical-space height="20px"/>
+        <blank-space height="20px"/>
         <button if="{bound.msState === 'display'}" onclick="{addMilestone}">Add Milestone</button>
     </div>
-    <style>    
+    <style>
+        .selected {
+            background: lightgoldenrodyellow;
+        }
     </style>
     <script>
         import {newCommon} from '../../Common';
+        import {MilestoneInfo} from '../../../data-type/ConceptTypes'
         let cm;
         export default {
             state: {
-              items: []
+              milestones: []
             },
             bound: {},
             selectMilestone(e) {
@@ -39,23 +48,35 @@
               comp = cm.getComponentParent(comp, 'milestone-page')
               // find the index of the labeled-value that contains this element
               let index = cm.findChildIndexWithElement(section, labelEl)
-              cm.getApp().model.setAtPath('uiElements.msSelected',comp.state.items[index])
+              cm.getApp().model.setAtPath('uiElements.msSelectedIndex',index)
               cm.getApp().model.setAtPath('uiElements.msState', 'display')
               comp.update()
             },
             addMilestone(e) {
-              cm.getApp().model.setAtPath('uiElements.msState', 'entry')
+              const nm = new MilestoneInfo()
+              nm.name = 'New Milestone'
+              this.state.milestones.push(nm)
+              cm.getApp().model.setAtPath('concept.milestones', this.state.milestones)
+              cm.getApp().model.setAtPath('uiElements.msSelectedIndex',this.state.milestones.length-1)
+            },
+            getMilestones() {
+              this.state.milestones = cm.getApp().model.getAtPath('concept.milestones')
+              let index = this.bound.msSelectedIndex
+              this.state.milestones.forEach(ms => {ms.isSelected = false})
+              let selms = this.state.milestones[index]
+              if(selms) selms.isSelected = true;
+              return this.state.milestones
             },
             onBeforeMount(props, state) {    
               cm = newCommon(this)
-              this.state.items = this.bound.milestones
+              this.state.milestones = this.bound.milestones
             },    
             onMounted(props, state) {
               cm.bindComponent()
-              this.state.items = this.bound.milestones
+              this.state.milestones = this.bound.milestones
             },
             onBeforeUpdate(props, state) {
-              this.state.items = this.bound.milestones
+              this.state.milestones = this.bound.milestones
             },
             onUpdated(props, state) {              
             },

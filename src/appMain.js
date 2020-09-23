@@ -12,7 +12,7 @@ console.log('registering components...')
 // register
 registerGlobalComponents()
 
-console.log('mounting app...')
+// console.log('mounting app...')
 
 // mount all the global components found in this page
 riot.mount('[data-riot-component]')
@@ -23,9 +23,11 @@ let app;
 console.log('starting app...')
 coreApp.requestMessages()
 coreApp.setProjectRoot('/Users/sohmert/tbd/projectus')
-coreApp.setupUIElements()
 coreApp.discovery().then(() => {
-  app = mountApp( document.getElementById('root'), { app: coreApp } )
+  console.log('--- past discovery...')
+  coreApp.setupUIElements().then(() => {
+    app = mountApp( document.getElementById('root'), { app: coreApp } )
+  })
 
 })
 

@@ -1,10 +1,21 @@
 /**
+ * THe Collections in the model take this form
+ */
+export class UseCaseAssets {
+    public actors: string[]
+    public roles: string[]
+    public packages: string[]
+    public scenarios: UseCaseInfo[]
+}
+
+/**
  * Holds the elements of a Use Case Scenario
  * that can be rendered via UML.
  */
 export class UseCaseInfo {
-    public name:string
-    public actors: string[]
+    public actor: string
+    public role: string
+    public pkg: string
     public scenario: string
     public outcome: string
 }
@@ -81,7 +92,7 @@ export class MilestoneInfo {
     public description: string;
     public targetDateStart: Date;
     public targetDateEnd: Date;
-    public objectives: string[];
+    public objectives: ObjectiveInfo[];
 }
 
 /**

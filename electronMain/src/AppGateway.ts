@@ -1,11 +1,15 @@
 
-import {projectDiscovery} from "./Discovery"
-import {readConcept} from "./DeveritaeFile"
+import {projectDiscovery,writeBackTopLevel} from "./Discovery"
+import {readConcept,writeConcept,readUseCaseAssets, writeUseCaseAssets} from "./DeveritaeFile"
 
 const exportedFunctions = {
     messageInit: () => { console.log('message init stub hit') },
     projectDiscovery,
     readConcept,
+    writeBackTopLevel,
+    writeConcept,
+    readUseCaseAssets,
+    writeUseCaseAssets
 }
 
 /**

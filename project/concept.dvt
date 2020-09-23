@@ -17,11 +17,4 @@ features of your design, knowing that your design plan is current with your proj
 and tests to verify that.
 
 # Development Milestones
-
-- First Parts
-- DVT Parsing
-- Objective breakdown
-- Code, component, and test construction
-- Objective code verification
-- Objective verification
-
+- Basic Persistence

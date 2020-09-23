@@ -1,30 +1,134 @@
 
 <objectives-page>
-    <div>
-        objectives-page stub
+    <div bind="concept.milestones">
+        <grid-layout
+                grid-template-columns = "repeat(3, 1fr)"
+                grid-template-rows = "auto"
+                area-row-1 = "t d d">
+
+            <grid-section area="t">
+                <div each="ms in bound.milestones">
+                <labeled-value each="obj in ms.objectives"
+                           class="{isSelected(obj) ? 'selected' :  ''}"
+                           label="{ms.name}"
+                           value="{obj.title}"
+                           width="200px" onclick="{onSelect}"/>
+                </div>
+
+
+            </grid-section>
+            <grid-section area="d">
+
+                <div if="{state.mode === 'status'}">
+                    <p>{showObj()}</p>
+                    <button if="{needsUseCase()}" onclick="{makeUseCase}">Create Use Case</button>
+                    <button if="{!needsUseCase() && needsAPI()}" onclick="{makeAPI}">Create API</button>
+                </div>
+
+                <use-case-entry if="{state.mode === 'usecase'}"/>
+                <api-spec-entry if="{state.mode === 'api'}"/>
+
+
+            </grid-section>
+        </grid-layout>
+
     </div>
-    <style>    
+    <style>
+        .selected {
+            color: crimson;
+        }
+        .listing {
+            cursor: pointer;
+        }
     </style>
     <script>
         import {newCommon} from '../../Common';
         let cm;
         export default {
-            state: { },
+            state: {
+              mode: 'status'
+            },
             bound: {},
             onBeforeMount(props, state) {    
-                cm = newCommon(this)
-            },    
-            onMounted(props, state) {
-                cm.bindComponent()
+              cm = newCommon(this)
             },
-            onBeforeUpdate(props, state) {              
+            onMounted(props, state) {
+              cm.bindComponent()
+            },
+            onBeforeUpdate(props, state) {
+              console.log(this.root.tagName, 'onBeforeUpdate', props, state)
             },
             onUpdated(props, state) {              
             },
-            onBeforeUnmount(props, state) {              
+            onBeforeUnmount(props, state) {
             },
             onUnmounted(props, state) {              
+            },
+            getMilestones() {
+              this.state.milestones = cm.getApp().model.getAtPath('concept.milestones')
+              let index = this.bound.msSelectedIndex
+              this.state.milestones.forEach(ms => {ms.isSelected = false})
+              let selms = this.state.milestones[index]
+              if(selms) selms.isSelected = true;
+              return this.state.milestones
+            },
+            getSelectedObjective() {
+                let index = this.state.index
+                let milestones = this.getMilestones()
+                let counter = 0;
+                let foundObj = null
+                milestones.forEach(ms => {
+                  ms.objectives.forEach(obj => {
+                    if(counter === index) {
+                      foundObj = obj;
+                    }
+                    counter++
+                  })
+                })
+              this.state.objective = foundObj
+            },
+            isSelected(obj) {
+              return this.state.objective && obj.title === this.state.objective.title;
+            },
+            onSelect(e) {
+              let el = e.srcElement
+              // find the milestone-page parent container
+              let comp = cm.getComponent(el) // labeled value
+              let section = cm.getComponentParent(comp)
+              let labelEl = comp.root
+              comp = cm.getComponentParent(comp, 'objectives-page')
+              // find the index of the labeled-value that contains this element
+              this.state.index = cm.findChildIndexWithElement(section, labelEl)
+              this.getSelectedObjective()
+              comp.update()
+            },
+            showObj() {
+              return JSON.stringify(this.state.objective, null, 2)
+            },
+            needsUseCase() {
+              const obj = this.state.objective
+              if(!obj) return false;
+              if(!obj.specifications) return true;
+              if(!obj.specifications.uml) return true;
+            },
+            needsAPI() {
+              const obj = this.state.objective
+              if(!obj) return false;
+              if(!obj.specifications) return true;
+              if(!obj.specifications.api) return true;
+            },
+            makeUseCase(e) {
+              const comp = cm.getComponent(e.srcElement)
+              this.state.mode = 'usecase'
+              comp.update()
+            },
+            makeAPI(e) {
+              const comp = cm.getComponent(e.srcElement)
+              this.state.mode = 'api'
+              comp.update()
+
             }
+
     }
     </script>
 </objectives-page>    
