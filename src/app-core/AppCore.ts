@@ -3,7 +3,7 @@ import {AppModel} from "./AppModel";
 import {StringParser} from "../general/StringParser"
 
 import {getInfoMessageRecorder, InfoMessageRecorder} from "./InfoMessageRecorder";
-import {UseCaseInfo} from "../data-type/ConceptTypes";
+import {SpecificationInfo, UMLInfo, UseCaseInfo} from "../data-type/ConceptTypes";
 
 let imrSingleton:InfoMessageRecorder = getInfoMessageRecorder()
 
@@ -246,16 +246,23 @@ class AppCore {
         return add
     }
 
-    public addUseCaseScenario(caseData:UseCaseInfo) {
-        const scenarios = this.model.getAtPath('useCase.scenarios') ||[]
-        scenarios.push(caseData)
-        scenarios.sort((a,b)=>{
-            if(a.pkg.localeCompare(b.pkg) === 0) {
-                return a.scenario.localeCompare(b.scenario)
-            }
-            return a.pkg.localeCompare(b.pkg)
-        })
-        this.model.setAtPath('useCase.scenarios', scenarios, true)
+    public addUseCaseScenario(msIndex:number, obIndex:number, caseData:UseCaseInfo) {
+        // concept.milestones[ms].objectives[ob].specifications.uml.useCases
+        console.log('>> addUseCaseScenario')
+        const milestones = this.model.getAtPath('concept.milestones')
+        const milestone = milestones[msIndex]
+        const objectives = milestone.objectives;
+        const objective = objectives[obIndex]
+        if(!objective.specifications) {
+            objective.specifications = new SpecificationInfo()
+        }
+        if(!objective.specifications.uml) {
+            objective.specifications.uml = new UMLInfo()
+        }
+        console.log('target objective', objective)
+        let useCases = objective.specifications.uml.useCases
+        useCases.push(caseData)
+        this.model.setAtPath('concept.milestones', milestones)
     }
     
 }

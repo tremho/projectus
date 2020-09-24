@@ -3,7 +3,8 @@ import * as path from 'path'
 import * as fs from 'fs'
 import {SimpleDateFormat} from '../../src/general/SimpleDateFormat'
 import {AppGateway} from "./AppGateway";
-import {ConceptInfo, MilestoneInfo, ObjectiveInfo, UseCaseAssets, UseCaseInfo} from "../../src/data-type/ConceptTypes"
+import {ConceptInfo, MilestoneInfo, ObjectiveInfo, SpecificationInfo,
+        UMLInfo, ApiInfo, UseCaseAssets, UseCaseInfo} from "../../src/data-type/ConceptTypes"
 
 
 function writeMessage(subject:string, message:string) {
@@ -145,12 +146,50 @@ export class DeveritaeFile {
             objectives.forEach(title => {
                 const objInfo = new ObjectiveInfo()
                 objInfo.title = title
+                objInfo.specifications.uml.useCases = this.readUseCases(title)
                 out.objectives.push(objInfo)
             })
+
         } else {
             // console.error(`>>> ${dvt} file not found`)
             writeMessage('Error', `${name+'.dvt'} file not found`)
         }
+        return out;
+    }
+    readUseCases(title:string) : UseCaseInfo[] {
+        const out = []
+        const items = this.readItems(this.readBlock(title))
+        items.forEach(it => {
+            it = it.trim()
+            if(it.charAt(0) === '-') it = it.substring(1)
+            let st = it.indexOf('[')+1
+            let en = it.indexOf(']', st)
+            let pkg = it.substring(st, en)
+            st = en+1;
+            en = it.indexOf(':', st)
+            let d = it.substring(st, en)
+            st = d.indexOf('(')
+            let actor, role;
+            if(st === -1) {
+                actor = d;
+                role = '';
+            } else {
+                actor = d.substring(0, st).trim()
+                role = d.substring(st+1, d.indexOf(')', st))
+            }
+            st = en + 1
+            en = it.indexOf(':', st)
+            let scenario = it.substring(st, en)
+            let outcome = it.substring(en+1)
+
+            let uc = new UseCaseInfo()
+            uc.pkg = pkg;
+            uc.actor = actor
+            uc.role = role
+            uc.scenario = scenario
+            uc.outcome = outcome
+            out.push(uc)
+        })
         return out;
     }
     // write milestone info to its own dvt file

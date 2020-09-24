@@ -1,6 +1,6 @@
 
 <objectives-page>
-    <div bind="concept.milestones">
+    <div bind="concept.milestones,uiElements.msSelectedIndex">
         <grid-layout
                 grid-template-columns = "repeat(3, 1fr)"
                 grid-template-rows = "auto"
@@ -8,8 +8,9 @@
 
             <grid-section area="t">
                 <div each="ms in bound.milestones">
-                <labeled-value each="obj in ms.objectives"
+                <labeled-value start="{count=0}" each="obj in ms.objectives"
                            class="{isSelected(obj) ? 'selected' :  ''}"
+                           msIndex = "{count++}"
                            label="{ms.name}"
                            value="{obj.title}"
                            width="200px" onclick="{onSelect}"/>
@@ -20,13 +21,25 @@
             <grid-section area="d">
 
                 <div if="{state.mode === 'status'}">
-                    <p>{showObj()}</p>
+
+                    <p>{getUseCases().length}</p>
+<!--                    <p each="uc in getUseCases()">[{uc.pkg}] {uc.actor} <<{uc.role}>> {uc.scenario} : {uc.outcome}</p>-->
+                    <labeled-value each ="uc in getUseCases()"
+                                   label="{uc.pkg}"
+                                   value = "{uc.actor} {uc.scenario}"
+                                   width="200px"
+                                   />
+<!--                                   class="{isSelected(uc) ? 'selected' :  ''}"-->
+<!--                                   label="{uc.pkg}"-->
+<!--                                   value="{uc.scenario}"-->
+<!--                                   width="200px" onclick="{onCaseSelect}"/>-->
+
                     <button if="{needsUseCase()}" onclick="{makeUseCase}">Create Use Case</button>
                     <button if="{!needsUseCase() && needsAPI()}" onclick="{makeAPI}">Create API</button>
                 </div>
 
-                <use-case-entry if="{state.mode === 'usecase'}"/>
-                <api-spec-entry if="{state.mode === 'api'}"/>
+                <use-case-entry if="{state.mode === 'usecase'}" msIndex="{state.objective && state.objective.msIndex}" obIndex="{state.index}"/>
+                <api-spec-entry if="{state.mode === 'api'}"  msIndex="{state.objective && state.objective.msIndex}" obIndex="{state.index}"/>
 
 
             </grid-section>
@@ -64,31 +77,40 @@
             },
             onUnmounted(props, state) {              
             },
-            getMilestones() {
-              this.state.milestones = cm.getApp().model.getAtPath('concept.milestones')
-              let index = this.bound.msSelectedIndex
-              this.state.milestones.forEach(ms => {ms.isSelected = false})
-              let selms = this.state.milestones[index]
-              if(selms) selms.isSelected = true;
-              return this.state.milestones
-            },
             getSelectedObjective() {
                 let index = this.state.index
-                let milestones = this.getMilestones()
+                let milestones = this.bound.milestones
                 let counter = 0;
+                let msCounter = -1;
                 let foundObj = null
                 milestones.forEach(ms => {
+                  msCounter++;
                   ms.objectives.forEach(obj => {
                     if(counter === index) {
                       foundObj = obj;
+                      foundObj.msIndex = msCounter
                     }
                     counter++
                   })
                 })
-              this.state.objective = foundObj
+                this.state.objective = foundObj
+            },
+            getUseCases() {
+              console.log('getUseCases')
+              if(this.state && this.state.objective) {
+                const specs = this.state.objective.specifications
+                if(specs && specs.uml) {
+                    return specs.uml.useCases
+                }
+
+              }
+              return []
             },
             isSelected(obj) {
-              return this.state.objective && obj.title === this.state.objective.title;
+              if(obj.scenario) {
+                return this.state.case.scenario && this.state.scenario === obj.scenario
+              }
+              return this.state.objective && obj.title === this.state.objective.title
             },
             onSelect(e) {
               let el = e.srcElement
@@ -102,8 +124,22 @@
               this.getSelectedObjective()
               comp.update()
             },
-            showObj() {
-              return JSON.stringify(this.state.objective, null, 2)
+            onCaseSelect(e) {
+              console.log('onCaseSelect', e)
+              let el = e.srcElement
+              // find the milestone-page parent container
+              let comp = cm.getComponent(el) // labeled value
+              let section = cm.getComponentParent(comp, 'grid-section')
+              let labelEl = comp.root
+              comp = cm.getComponentParent(comp, 'objectives-page')
+              // find the index of the labeled-value that contains this element
+              let index = cm.findChildIndexWithElement(section, labelEl)
+              this.state.case = this.getCases()[index]
+              comp = cm.getComponentParent(comp, 'objectives-page')
+              comp.update()
+            },
+            showObj(obj) {
+              return JSON.stringify(obj, null, 2)
             },
             needsUseCase() {
               const obj = this.state.objective

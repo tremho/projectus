@@ -11,7 +11,7 @@
     "clean": "rm -fr build css; cd electronMain; npm run clean",
     "build": "tsc; sass src/scss:css; webpack -c --mode production",
     "prepublishOnly": "npm test",
-    "start": "tsc; sass src/scss:css; webpack -c --mode development; cd electronMain; npm run start",
+    "start": "tsc && sass src/scss:css && webpack -c --mode development && cd electronMain && npm run start",
     "compgen": "node tools/compgen interactive"
   },
   "keywords": [],

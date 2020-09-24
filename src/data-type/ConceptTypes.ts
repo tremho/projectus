@@ -2,10 +2,10 @@
  * THe Collections in the model take this form
  */
 export class UseCaseAssets {
-    public actors: string[]
-    public roles: string[]
-    public packages: string[]
-    public scenarios: UseCaseInfo[]
+    public actors: string[] = []
+    public roles: string[] = []
+    public packages: string[] = []
+    public scenarios: UseCaseInfo[] = []
 }
 
 /**
@@ -13,21 +13,21 @@ export class UseCaseAssets {
  * that can be rendered via UML.
  */
 export class UseCaseInfo {
-    public actor: string
-    public role: string
-    public pkg: string
-    public scenario: string
-    public outcome: string
+    public actor: string = ''
+    public role: string = ''
+    public pkg: string = ''
+    public scenario: string = ''
+    public outcome: string = ''
 }
 
 /**
  * Describes a relationship between component concepts
  */
 export class ExchangeInfo {
-    public name: string
-    public type: string; // type of data
-    public direction: string; // in, out or read,write
-    public target: string; // name of related component
+    public name: string = ''
+    public type: string = '' ; // type of data
+    public direction: string = ''; // in, out or read,write
+    public target: string = ''; // name of related component
 }
 
 /**
@@ -35,17 +35,17 @@ export class ExchangeInfo {
  * component concepts and their modules
  */
 export class ArchRelationshipInfo {
-    public name: string // name of this component concept
-    public modules: string[] // modules that comprise this component
-    public exchanges: ExchangeInfo[] // exchanges with other component concepts
+    public name: string = '' // name of this component concept
+    public modules: string[]  = [] // modules that comprise this component
+    public exchanges: ExchangeInfo[] = [] // exchanges with other component concepts
 }
 
 /**
  * Holds the UML generation materials
  */
 export class UMLInfo {
-    public useCases:UseCaseInfo[]
-    public archRelations: ArchRelationshipInfo[]
+    public useCases:UseCaseInfo[] = []
+    public archRelations: ArchRelationshipInfo[] = []
     // tk: UML output products
 }
 
@@ -59,8 +59,8 @@ export class UMLInfo {
  * (are tests passing? have we touched it since the stubs?)
  */
 export class ApiInfo {
-    public modules: string[]
-    public reconciliations: []
+    public modules: string[] = []
+    public reconciliations: [] = []
     // tk: veritas operations and canonical reporting
 }
 
@@ -70,16 +70,16 @@ export class ApiInfo {
  * and code and test stubs.
  */
 export class SpecificationInfo {
-    public uml: UMLInfo
-    public api: ApiInfo
+    public uml: UMLInfo = new UMLInfo()
+    public api: ApiInfo = new ApiInfo()
 }
 
 /**
  * Information about a single objective within a milestone
  */
 export class ObjectiveInfo {
-    public title:string
-    public specifications: SpecificationInfo[]
+    public title:string = ''
+    public specifications: SpecificationInfo = new SpecificationInfo()
 }
 
 /**
@@ -88,11 +88,11 @@ export class ObjectiveInfo {
  * Note that milestones can be added as development proceeds (e.g. as in an Agile scenario)
  */
 export class MilestoneInfo {
-    public name: string;
-    public description: string;
+    public name: string = ''
+    public description: string = ''
     public targetDateStart: Date;
     public targetDateEnd: Date;
-    public objectives: ObjectiveInfo[];
+    public objectives: ObjectiveInfo[] = []
 }
 
 /**

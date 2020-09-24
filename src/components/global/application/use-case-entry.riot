@@ -34,6 +34,8 @@
         bound: {},
         onBeforeMount(props, state) {
           cm = newCommon(this)
+          this.state.msIndex = props.msIndex;
+          this.state.obIndex = props.obIndex;
         },
         onMounted(props, state) {
           console.log(this.root.tagName, 'onMounted', props, state)
@@ -75,8 +77,8 @@
           const caseData = {
             actor, role, pkg, scenario, outcome
           }
-          console.log('entering case ', caseData)
-          app.addUseCaseScenario(caseData)
+          console.log('entering case ', caseData, this.state.msIndex, this.state.obIndex)
+          app.addUseCaseScenario(this.state.msIndex, this.state.obIndex, caseData)
         }
       }
     </script>

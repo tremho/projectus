@@ -199,8 +199,15 @@ API and see if they are out of sync.
 
 - recording Collections for useCaseAssets; this is good.
 - recording scenarios... good but needs changes
-- We want to list objectives by title in the {showObj} place
+- We want to list uaw cases by title in the {showObj} place
 - We want to associate this objective title to any use cases
 - Scenarios should be stored in the model under the objective
 - should be persisted as part of the objective, not scenarios.dvt
+
+##### 9/24
+- Now reading use cases from milestone tree and dvt file format
+is set.
+- Need to do the writing of the dvt for update
+- Need to restructure objectives page to allow new use cases
+to be added to any objective, and apis for each use case without them.
 
