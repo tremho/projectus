@@ -1,14 +1,29 @@
 
 <api-spec-entry>
     <div>
-        api-spec-entry stub <br/>
-        <ol>
-            <li>Attach to corresponding use case</li>
-            <li>Assign a module to a scenario in a package</li>
-            <li>Create the API functions</li>
-            <li>Create the specification details for each api function</li>
-            <li>Update action will generate tests from the api specs</li>
-        </ol>
+        <p>"{describeUseCase()}"</p>
+        <div if="{!moduleNamed()}">
+            <p>What module should this API belong to?</p>
+            <input type="text" size="47"/><br/>
+            <p>If this API belongs in a class, name the class here:</p>
+            <input type="text" size="47"/><br/>
+        </div>
+        <div if="{moduleNamed()}">
+            <p>{state.pkg}/{state.module}:{state.class}</p>
+        </div>
+        <blank-space height="30px"/>
+        <button onclick="{addFunction}">Define a new API function</button>
+        <div if="{state.mode === 'defFunc'}">
+            <p> Define a function for {state.pkg}/{state.module}:{state.class}</p>
+            <p>Name</p>
+            <input type="text" size="47"/><br/>
+            <p>Description</p>
+            <input type="text" size="47"/><br/>
+            <blank-space height="15px"/>
+            <button onclick="{addParameter}">Add Parameter</button>
+            <button onclick="{defReturn}">Define return type</button>
+            <button onclick="{funcDone}">Done</button>
+        </div>
     </div>
     <style>
     </style>
@@ -32,6 +47,45 @@
         onBeforeUnmount(props, state) {
         },
         onUnmounted(props, state) {
+        },
+        describeUseCase() {
+          let {msIndex, obIndex, ucIndex} = this.props
+          const milestone = cm.getApp().model.getAtPath('concept.milestones')[msIndex]
+          const objective = milestone.objectives[obIndex]
+          const usecases = objective.specifications.uml.useCases
+          const ucase = usecases[ucIndex]
+          this.state.pkg = ucase.pkg
+          let text = `${ucase.actor}<<${ucase.role}>> ${ucase.scenario} --> ${ucase.outcome}`
+          return text;
+        },
+        moduleNamed() {
+          const ins = this.$$('input')
+          if(!ins || !ins.length) return false;
+          if(!this.state.module) {
+            this.state.module = ins[0].value
+          }
+          if(!this.state.class) {
+            this.state.class = ins[1].value
+          }
+          return this.state.module.length !== 0
+        },
+        addFunction(e) {
+          const comp = cm.getComponent(e.srcElement)
+          comp.update({
+            mode: 'defFunc'
+          })
+        },
+        funcDone(e) {
+          const comp = cm.getComponent(e.srcElement)
+          comp.update({
+            mode: ''
+          })
+        },
+        addParameter(e) {
+          console.log('add a parameter')
+        },
+        defReturn(e) {
+          console.log('define the return type')
         }
       }
     </script>

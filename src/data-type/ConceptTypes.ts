@@ -50,7 +50,30 @@ export class UMLInfo {
 }
 
 /**
- * Class will use the modules listed
+ * Status of asset generation and validation for each Api Declaration
+ */
+export class ApiReconciliation {
+    public docStatus: string = '' // doc generation and InchJS report card
+    public umlStatus: string = '' // diagram generation to be explored more.
+    public testStatus: string = '' // spec generation and Instabul (nyc) report card.
+}
+
+/**
+ * A Declaration of an API as parsed from a code file.
+ * A new declaration may be added after parsing (including the case of a non-existing module)
+ * which will have empty reconcilations and force new generation.
+ */
+export class ApiDeclaration {
+    public pkg:string = ''
+    public module:string = ''
+    public type: string = '' // 'code' or 'ui'
+    public class: string = ''
+    public function: string = ''
+    public reconciliation:ApiReconciliation = new ApiReconciliation()
+
+}
+/**
+ * Class will use the declarations listed
  * (which generally come from the SpecificatonInfo modeling, but
  * can also be added seperately)
  * to generate code and test assets and to
@@ -59,9 +82,7 @@ export class UMLInfo {
  * (are tests passing? have we touched it since the stubs?)
  */
 export class ApiInfo {
-    public modules: string[] = []
-    public reconciliations: [] = []
-    // tk: veritas operations and canonical reporting
+    public declarations: ApiDeclaration[] = []
 }
 
 /**

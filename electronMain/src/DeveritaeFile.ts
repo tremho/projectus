@@ -205,10 +205,26 @@ export class DeveritaeFile {
         text += this.makeBlock('Description', msInfo.description)
         text += '# Objectives\n'
         let objs = []
-        msInfo.objectives.forEach(o=> {objs.push(o.title)})
-        text += this.makeItemsBlock(objs)
+        let ucText = '\n\n'
+        msInfo.objectives.forEach(o=> {
+            objs.push(o.title)
+            ucText += this.makeUseCaseBlock(o) + '\n'
+        })
+        text += this.makeItemsBlock(objs) + ucText;
         fs.writeFileSync(dvt, text)
+    }
 
+    makeUseCaseBlock(obj:ObjectiveInfo): string {
+        // format and write out use case data
+        let ucases = obj.specifications.uml.useCases
+        let items = []
+        ucases.forEach(ucase => {
+            let ar = ucase.actor;
+            if(ucase.role) ar += ` (${ucase.role})`
+            let ln = `[${ucase.pkg}] ${ar} : ${ucase.scenario} : ${ucase.outcome}`
+            items.push(ln)
+        })
+        return this.makeBlock(obj.title, this.makeItemsBlock(items))
     }
 
     parseTree() {

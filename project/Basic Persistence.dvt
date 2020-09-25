@@ -2,10 +2,10 @@
 Basic Persistence
 
 # Target Start Date
-Wed Sep 23 2020
+Fri Sep 25 2020
 
 # Target End Date
-Wed Sep 23 2020
+Fri Sep 25 2020
 
 # Description
 Simple read and write of the data we work with.
@@ -14,4 +14,7 @@ Simple read and write of the data we work with.
 - Read, Write DVT
 
 # Read, Write DVT
-- [Startup] User 1 (user) : Starts Application : Application is Running
+- [Startup] User 1 (user) :    Starts Application    :    Application is Running
+- [Specification Entry] User 1 (user) : Adds a use case : A new Use case appears in the list and is persisted on update
+
+

@@ -211,3 +211,52 @@ is set.
 - Need to restructure objectives page to allow new use cases
 to be added to any objective, and apis for each use case without them.
 
+###### 9/25
+Okay.
+above is working.
+Note that "apis for each use case without them" is misleading because
+we currently have no correlation between use cases and API.
+
+- should generate an ID for each use case
+- API should then reference this UCID
+
+We also have packages named here that we could start to formulate
+into arch relationships.  But let's stick to the goal of generating
+testable assets first.
+
+**Api Entry**<br/> 
+- Ask for module name.  This combines with package to create a file path.
+- This may be an existing file
+- Ask if API belongs to a class.  This may be an existing class within the module
+- Add a function
+
+I think we need to revisit our basic types a bit, esp. Api.
+For starters, a use case may have more than one API that services it.
+A classic case is a business operation API that has corresponding UX components
+for input and display.  So, in this example, 3 APIs.
+- Need to differentiate UI Components from code modules.
+- Add to ApiInfo.modules as a structure
+    - package
+    - module name
+    - class name if relevant
+    - function name
+
+Keeping in mind that persistence is via code assets. So we need to
+read and parse module files for classes and functions and reconcile.
+Also need to write, including appending into correct location.
+
+----
+Not thrilled with the way I have the display working for api... should show the
+apis defined already (to the right?)
+- Need to do parameter list and entry also
+- also return type
+
+Both of these require constraint definition, which of course
+varies by the primitive type.  I'm thinking a swappable set of
+drop-downs which each reveal a series of label value inputs.
+
+Wondering though, if maybe first I shouldn't create the intermediate structures
+and hand-code these for prototype and then test/build out the code generation/decoration
+and parsing, since that is the brute core of this proposition.
+
+

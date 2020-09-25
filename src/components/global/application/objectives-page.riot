@@ -22,24 +22,24 @@
 
                 <div if="{state.mode === 'status'}">
 
-                    <p>{getUseCases().length}</p>
-<!--                    <p each="uc in getUseCases()">[{uc.pkg}] {uc.actor} <<{uc.role}>> {uc.scenario} : {uc.outcome}</p>-->
-                    <labeled-value each ="uc in getUseCases()"
-                                   label="{uc.pkg}"
-                                   value = "{uc.actor} {uc.scenario}"
-                                   width="200px"
-                                   />
-<!--                                   class="{isSelected(uc) ? 'selected' :  ''}"-->
-<!--                                   label="{uc.pkg}"-->
-<!--                                   value="{uc.scenario}"-->
-<!--                                   width="200px" onclick="{onCaseSelect}"/>-->
-
-                    <button if="{needsUseCase()}" onclick="{makeUseCase}">Create Use Case</button>
-                    <button if="{!needsUseCase() && needsAPI()}" onclick="{makeAPI}">Create API</button>
+                    <div each="uc in getUseCases()">
+                        <labeled-value label="{uc.pkg}"
+                                       value = "{uc.actor} {uc.scenario}"
+                                       width="300px"
+                                       />
+                        <button if="{needsAPI(uc)}" onclick="{makeAPI}">Create API</button>
+                    </div>
+                    <blank-space height="30px"/>
+                    <button if="{state.objective}" onclick="{makeUseCase}">Add new Use Case</button>
+<!--                    <button if="{!needsUseCase() && needsAPI()}" onclick="{makeAPI}">Create API</button>-->
                 </div>
 
                 <use-case-entry if="{state.mode === 'usecase'}" msIndex="{state.objective && state.objective.msIndex}" obIndex="{state.index}"/>
-                <api-spec-entry if="{state.mode === 'api'}"  msIndex="{state.objective && state.objective.msIndex}" obIndex="{state.index}"/>
+                <api-spec-entry if="{state.mode === 'api'}"
+                                msIndex="{state.objective && state.objective.msIndex}"
+                                obIndex="{state.index}"
+                                ucIndex="{state.ucIndex}"
+                />
 
 
             </grid-section>
@@ -124,43 +124,40 @@
               this.getSelectedObjective()
               comp.update()
             },
-            onCaseSelect(e) {
-              console.log('onCaseSelect', e)
-              let el = e.srcElement
-              // find the milestone-page parent container
-              let comp = cm.getComponent(el) // labeled value
-              let section = cm.getComponentParent(comp, 'grid-section')
-              let labelEl = comp.root
-              comp = cm.getComponentParent(comp, 'objectives-page')
-              // find the index of the labeled-value that contains this element
-              let index = cm.findChildIndexWithElement(section, labelEl)
-              this.state.case = this.getCases()[index]
-              comp = cm.getComponentParent(comp, 'objectives-page')
-              comp.update()
-            },
-            showObj(obj) {
-              return JSON.stringify(obj, null, 2)
-            },
             needsUseCase() {
               const obj = this.state.objective
               if(!obj) return false;
               if(!obj.specifications) return true;
               if(!obj.specifications.uml) return true;
             },
-            needsAPI() {
+            needsAPI(uc) {
               const obj = this.state.objective
               if(!obj) return false;
               if(!obj.specifications) return true;
               if(!obj.specifications.api) return true;
+              return true; // for now at least
+
             },
             makeUseCase(e) {
               const comp = cm.getComponent(e.srcElement)
-              this.state.mode = 'usecase'
-              comp.update()
+              comp.update({
+                mode: 'usecase'
+              })
             },
             makeAPI(e) {
+              let el = e.srcElement;
+              let cdiv = el.parentElement
+              let children = cdiv.parentElement.children;
+              let index = -1;
+              for(let i = 0; i < children.length; i++) {
+                if(children[i] === cdiv) {
+                  index = i;
+                  break;
+                }
+              }
               const comp = cm.getComponent(e.srcElement)
               this.state.mode = 'api'
+              this.state.ucIndex = index;
               comp.update()
 
             }
